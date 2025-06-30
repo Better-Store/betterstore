@@ -10,7 +10,7 @@
     "check-types": "turbo run check-types",
     "generate": "turbo run generate",
     "prep": "changeset && changeset version && pnpm run format && git add .",
-    "publish-packages": "pnpm run format:check && turbo run check-types build lint && changeset version && changeset publish",
+    "release": "turbo run check-types build lint && changeset publish",
     "prepare": "husky"
   },
   "devDependencies": {
