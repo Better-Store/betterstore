@@ -1,0 +1,82 @@
+{
+  "CheckoutEmbed": {
+    "Summary": {
+      "title": "Summary",
+      "edit": "Edit",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "calculatedAtNextStep": "Calculated at next step",
+      "tax": "Tax",
+      "discountCodePlaceholder": "Discount code or gift card",
+      "discountCodeApply": "Apply",
+      "discountCodeError": "You're already getting the best offer!",
+      "free": "Free",
+      "discountCodeSuccess": "Discount code applied successfully.",
+      "discountCodeLabel": "Discount Code"
+    },
+    "CustomerForm": {
+      "address": {
+        "address": "Address",
+        "addressPlaceholder": "Enter your address",
+        "title": "Enter your address",
+        "description": "Fill in your address details below.",
+        "line1": "Street address",
+        "line1Placeholder": "123 Main Street",
+        "line2": "Apartment, suite, unit, etc. (optional)",
+        "line2Placeholder": "Apt 4B, Suite 123, etc.",
+        "city": "City",
+        "cityPlaceholder": "San Francisco",
+        "country": "Country",
+        "countryPlaceholder": "Enter your country",
+        "state": "State (optional)",
+        "statePlaceholder": "California",
+        "zipCode": "Zip code",
+        "zipCodePlaceholder": "12345",
+        "button": "Save address"
+      },
+      "title": "Basic information",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "firstName": "First name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Enter your last name",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter your phone number",
+      "button": "Save and continue"
+    },
+    "loading": "Loading...",
+    "Shipping": {
+      "title": "Shipping",
+      "change": "Change",
+      "address": "Address:",
+      "contact": "Contact:",
+      "button": "Continue to checkout",
+      "back": "Back to information",
+      "shipping": "Shipping:",
+      "estimatedDeliveryDate": "Estimated delivery date: ",
+      "day": "day",
+      "days": "days",
+      "description": {
+        "other": "Your package will be delivered by a courier.",
+        "zasilkovna": "Your package will be delivered to a pickup point.",
+        "shippedTo": "Shipped to:"
+      }
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "All transactions are secure and encrypted.",
+      "back": "Back to shipping",
+      "button": "Buy now"
+    }
+  },
+  "Errors": {
+    "required_error": "This field is required",
+    "invalid_email": "Please enter a valid email address",
+    "invalid_phone": "Please enter a valid phone number",
+    "invalid_zipCode": "Please enter a valid zip code",
+    "invalid_address": "Please enter a valid address",
+    "unknown_error": "An unknown error occurred"
+  }
+}

@@ -5,11 +5,19 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "format:check": "prettier --check --ignore-path .prettierignore .",
+    "format": "prettier --write --ignore-path .prettierignore .",
+    "check-types": "turbo run check-types",
+    "generate": "turbo run generate",
+    "prep": "changeset && changeset version && pnpm run format && git add .",
+    "publish-packages": "pnpm run format:check && turbo run check-types build lint && changeset version && changeset publish",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
+    "husky": "^9.1.7",
     "prettier": "^3.6.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "turbo": "^2.5.4",
     "typescript": "5.8.2"
   },

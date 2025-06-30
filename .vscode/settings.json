@@ -1,4 +1,34 @@
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.quickSuggestionsDelay": 0,
+  "editor.acceptSuggestionOnEnter": "on",
+  "files.associations": {
+    ".html": "html",
+    ".ts": "typescript",
+    ".tsx": "typescriptreact",
+    ".prisma": "prisma",
+    ".json": "json",
+    ".js": "javascript",
+    "*.css": "tailwindcss",
+    ".gitignore": "ignore"
+  },
+  "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
+  "turboConsoleLog.addSemicolonInTheEnd": true,
+  "turboConsoleLog.delimiterInsideMessage": "-",
+  "turboConsoleLog.insertEmptyLineAfterLogMessage": false,
+  "turboConsoleLog.insertEmptyLineBeforeLogMessage": false,
+  "turboConsoleLog.logMessagePrefix": "",
+  "turboConsoleLog.logMessageSuffix": ": ",
+  "turboConsoleLog.wrapLogMessage": false,
+  "workbench.sideBar.location": "right",
+  "i18n-ally.localesPaths": ["messages"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "en",
   "eslint.workingDirectories": [
     {
       "mode": "auto"

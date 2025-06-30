@@ -1,0 +1,82 @@
+{
+  "CheckoutEmbed": {
+    "CustomerForm": {
+      "address": {
+        "address": "Adresa",
+        "addressPlaceholder": "Zadejte Vaši adresu",
+        "button": "Uložit adresu",
+        "city": "Město",
+        "cityPlaceholder": "Zadejte město",
+        "country": "Země",
+        "countryPlaceholder": "Zadejte svou zemi",
+        "description": "Níže vyplňte údaje o Vaší adrese.",
+        "line1": "Ulice",
+        "line1Placeholder": "Zadejte ulici a číslo",
+        "line2": "Byt, apartmá, jednotka atd. (Volitelné)",
+        "line2Placeholder": "Byt 4B, Pokoj 123, atd.",
+        "state": "Stát (volitelné)",
+        "statePlaceholder": "Kalifornie",
+        "title": "Zadejte Vaši adresu",
+        "zipCode": "PSČ",
+        "zipCodePlaceholder": "12345"
+      },
+      "button": "Uložit a pokračovat",
+      "email": "Email",
+      "emailPlaceholder": "Zadejte svůj email",
+      "firstName": "Křestní jméno",
+      "firstNamePlaceholder": "Zadejte své křestní jméno",
+      "lastName": "Příjmení",
+      "lastNamePlaceholder": "Zadejte své příjmení",
+      "phone": "Telefon",
+      "phonePlaceholder": "Zadejte své telefonní číslo",
+      "title": "Kontaktní údaje"
+    },
+    "Summary": {
+      "calculatedAtNextStep": "Vypočítáno v dalším kroku",
+      "edit": "Upravit",
+      "shipping": "Doprava",
+      "subtotal": "Mezisoučet",
+      "tax": "Daň",
+      "title": "Shrnutí",
+      "total": "Celkem",
+      "discountCodeApply": "Aplikovat",
+      "discountCodePlaceholder": "Slevový kód nebo dárková karta",
+      "discountCodeError": "Už dostáváte nejlepší nabídku!",
+      "free": "Zdarma",
+      "discountCodeSuccess": "Slevový kód byl úspěšně použit.",
+      "discountCodeLabel": "Slevový kód"
+    },
+    "loading": "Načítání ...",
+    "Payment": {
+      "back": "Zpět na výběr dopravy",
+      "button": "Dokončit objednávku",
+      "description": "Všechny transakce jsou zabezpečené a šifrované.",
+      "title": "Platba"
+    },
+    "Shipping": {
+      "title": "Doprava",
+      "back": "Zpět k informacím",
+      "button": "Pokračovat",
+      "change": "Změnit",
+      "contact": "Kontakt:",
+      "day": "den",
+      "days": "dny",
+      "estimatedDeliveryDate": "Odhadované datum dodání:",
+      "address": "Adresa:",
+      "shipping": "Doprava:",
+      "description": {
+        "other": "Váš balíček bude doručen kurýrem.",
+        "zasilkovna": "Vaše objednávka bude doručena na výdejní místo.",
+        "shippedTo": "Místo doručení:"
+      }
+    }
+  },
+  "Errors": {
+    "invalid_email": "Zadejte platnou e-mailovou adresu",
+    "invalid_phone": "Zadejte platné telefonní číslo",
+    "invalid_zipCode": "Zadejte platný PSČ",
+    "required_error": "Toto pole je povinné",
+    "unknown_error": "Došlo k neznámé chybě",
+    "invalid_address": "Zadejte platnou adresu"
+  }
+}
