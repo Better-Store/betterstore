@@ -1,4 +1,5 @@
 import { createApiClient } from "../utils/axios";
+import { AutocompleteResult } from "./types";
 
 const currencyLocales: Record<string, string> = {
   CZK: "cs-CZ", // Czech Koruna
@@ -91,6 +92,23 @@ class Helpers {
     }
 
     return rate;
+  }
+
+  async getAutocompleteAddressResults(
+    query: string,
+    locale?: string
+  ): Promise<AutocompleteResult[]> {
+    const apiClient = createApiClient("", this.proxy);
+    const { data } = await apiClient.get(
+      `/helpers/autocomplete-address/${query}`,
+      {
+        params: {
+          locale,
+        },
+      }
+    );
+
+    return data;
   }
 }
 

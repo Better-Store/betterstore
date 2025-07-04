@@ -1,9 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
-  "changelog": [
-    "@changesets/cli/changelog",
-    { "exclude": ["@betterstore/*config"] }
-  ],
+  "changelog": false,
   "commit": false,
   "fixed": [["@betterstore/react", "@betterstore/sdk"]],
   "linked": [],
