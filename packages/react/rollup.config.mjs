@@ -36,7 +36,7 @@ export default {
     resolve({
       extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
       alias: {
-        "@": pathResolve(__dirname, "src"),
+        "@/react": pathResolve(__dirname, "src"),
       },
       browser: true,
       preferBuiltins: false,
