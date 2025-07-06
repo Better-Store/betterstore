@@ -1,17 +1,16 @@
 import { CheckoutEmbed } from "@/react/components";
 import ReactDOM from "react-dom/client";
-import "../globals.css";
 
 const App = () => {
   return (
     <CheckoutEmbed
-      checkoutId="68361ce316a85abff854b11e"
+      checkoutId="686a5d013f99bd3c0357740e"
       config={{
         clientSecret:
-          "fb98f2506ffe6981a40d02f93879f004842f23cbe3b3cbd93da0b5971ff63854",
+          "aa8294786a9f41097d7e38142e231358280456371415386c4fe5b66fc6f6cbc5",
         cancelUrl: "/cancel",
         successUrl: "/success",
-        appearance: { theme: "light" },
+        locale: "cs",
         clientProxy: "/api/betterstore",
       }}
     />

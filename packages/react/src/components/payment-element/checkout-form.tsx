@@ -3,8 +3,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import React, { memo, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { memo, useState } from "react";
 import { useCheckout } from "./useCheckout";
 
 const CheckoutForm = ({
@@ -24,24 +23,6 @@ const CheckoutForm = ({
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [rect, setRect] = useState<DOMRect | null>(null);
-
-  useEffect(() => {
-    const updateRect = () => {
-      if (containerRef.current) {
-        setRect(containerRef.current.getBoundingClientRect());
-      }
-    };
-
-    updateRect();
-
-    window.addEventListener("resize", updateRect);
-
-    return () => {
-      window.removeEventListener("resize", updateRect);
-    };
-  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -71,35 +52,16 @@ const CheckoutForm = ({
     }
   };
 
-  const wrapper = document.getElementById("bs-wrapper");
-  if (!wrapper) return null;
-
   return (
-    <>
-      <div ref={containerRef} className="h-[450px] w-full" />
-      {ReactDOM.createPortal(
-        <div
-          style={{
-            display: "block",
-            zIndex: 20,
-            position: "absolute",
-            top: rect?.top,
-            left: rect?.left,
-            width: rect?.width,
-            height: rect?.height,
-          }}
-        >
-          <form onSubmit={handleSubmit}>
-            <div>
-              <PaymentElement />
-              <p style={{ color: "#fb2c36" }}>{errorMessage}</p>
-            </div>
-            {children}
-          </form>
-        </div>,
-        wrapper
-      )}
-    </>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <PaymentElement />
+        {errorMessage && (
+          <p className="text-destructive mt-2 text-sm">{errorMessage}</p>
+        )}
+      </div>
+      {children}
+    </form>
   );
 };
 

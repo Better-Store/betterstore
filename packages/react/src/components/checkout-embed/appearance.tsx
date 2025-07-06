@@ -28,32 +28,76 @@ export type AppearanceConfig = {
   };
 };
 
+// Utility function to format colors (converts oklch to hex, keeps other formats as-is)
+const formatColor = (color: string | undefined): string => {
+  // If color is undefined, return a default
+  if (!color) {
+    return "#000000";
+  }
+  // If it's already a hex, rgb, or hsl color, return as is
+  if (
+    color.startsWith("#") ||
+    color.startsWith("rgb") ||
+    color.startsWith("hsl")
+  ) {
+    return color;
+  }
+
+  // If it's an oklch color, convert it
+  if (color.startsWith("oklch")) {
+    try {
+      // Create a temporary element to use CSS color conversion
+      const tempElement = document.createElement("div");
+      tempElement.style.color = color;
+      document.body.appendChild(tempElement);
+
+      // Get computed style to convert to rgb
+      const computedColor = window.getComputedStyle(tempElement).color;
+      document.body.removeChild(tempElement);
+
+      // Convert rgb to hex
+      const rgbMatch = computedColor.match(
+        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
+      );
+      if (rgbMatch) {
+        const r = parseInt(rgbMatch[1] ?? "0");
+        const g = parseInt(rgbMatch[2] ?? "0");
+        const b = parseInt(rgbMatch[3] ?? "0");
+        return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+      }
+    } catch (error) {
+      console.warn("Failed to convert oklch color to hex:", color, error);
+    }
+  }
+
+  // Fallback to a default color if conversion fails
+  return "#000000";
+};
+
 export default function Appearance({
   appearance,
   fonts,
-  iframeRef,
+  shadowRef,
 }: {
   appearance?: AppearanceConfig;
   fonts?: Fonts;
-  iframeRef?: React.RefObject<HTMLIFrameElement | null>;
+  shadowRef?: React.RefObject<HTMLDivElement | null>;
 }) {
   useEffect(() => {
-    if (!iframeRef?.current) return;
+    if (!shadowRef?.current?.shadowRoot) return;
 
     try {
       const variables = getVariablesFromAppearanceConfig(appearance);
-      const iframeDoc =
-        iframeRef.current.contentDocument ||
-        iframeRef.current.contentWindow?.document;
+      const shadowRoot = shadowRef.current.shadowRoot;
 
-      if (!iframeDoc) {
-        console.warn("Unable to access iframe document");
+      if (!shadowRoot) {
+        console.warn("Unable to access shadow root");
         return;
       }
 
       if (variables) {
         Object.entries(variables).forEach(([key, value]) => {
-          iframeDoc.documentElement.style.setProperty(key, value);
+          (shadowRoot.host as HTMLElement).style.setProperty(key, value);
         });
       }
 
@@ -63,13 +107,13 @@ export default function Appearance({
           try {
             if ("cssSrc" in font) {
               // Handle CSS font source
-              const link = iframeDoc.createElement("link");
+              const link = document.createElement("link");
               link.rel = "stylesheet";
               link.href = font.cssSrc;
-              iframeDoc.head.appendChild(link);
+              shadowRoot.appendChild(link);
             } else if ("family" in font) {
               // Handle custom font source
-              const style = iframeDoc.createElement("style");
+              const style = document.createElement("style");
               style.textContent = `
                 @font-face {
                   font-family: '${font.family}';
@@ -78,7 +122,7 @@ export default function Appearance({
                   font-style: ${font.style || "normal"};
                 }
               `;
-              iframeDoc.head.appendChild(style);
+              shadowRoot.appendChild(style);
             }
           } catch (error) {
             console.error("Error loading font:", error);
@@ -88,7 +132,7 @@ export default function Appearance({
     } catch (error) {
       console.error("Error applying appearance styles:", error);
     }
-  }, [appearance, fonts, iframeRef]);
+  }, [appearance, fonts, shadowRef]);
 
   return null;
 }
@@ -187,23 +231,6 @@ const getColorVariablesFromAppearanceConfig = (
     "--input": appearance?.colors?.border ?? fallbackColors.border,
     "--ring": appearance?.colors?.ring ?? fallbackColors.ring,
 
-    // Chart colors (keeping original values)
-    "--chart-1": isDark
-      ? "oklch(0.488 0.243 264.376)"
-      : "oklch(0.646 0.222 41.116)",
-    "--chart-2": isDark
-      ? "oklch(0.696 0.17 162.48)"
-      : "oklch(0.6 0.118 184.704)",
-    "--chart-3": isDark
-      ? "oklch(0.769 0.188 70.08)"
-      : "oklch(0.398 0.07 227.392)",
-    "--chart-4": isDark
-      ? "oklch(0.627 0.265 303.9)"
-      : "oklch(0.828 0.189 84.429)",
-    "--chart-5": isDark
-      ? "oklch(0.645 0.246 16.439)"
-      : "oklch(0.769 0.188 70.08)",
-
     // Sidebar
     "--sidebar": appearance?.colors?.background ?? fallbackColors.sidebar,
     "--sidebar-foreground":
@@ -250,9 +277,10 @@ export const convertCheckoutAppearanceToStripeAppearance = (
         fontSize: "14px",
         fontWeight: "500",
       },
-      ".Input:disabled, .Input--invalid:disabled": {
-        cursor: "not-allowed",
-      },
+      // Removed cursor property as it's not supported by Stripe
+      // ".Input:disabled, .Input--invalid:disabled": {
+      //   cursor: "not-allowed",
+      // },
       // ".Block": {
       //   backgroundColor: "#000000",
       //   boxShadow: "none",
@@ -282,12 +310,14 @@ export const convertCheckoutAppearanceToStripeAppearance = (
       borderRadius: currentVariables["--radius"],
       // colorSuccess: currentVariables["--success"],
       // colorWarning: currentVariables["--warning"],
-      colorDanger: currentVariables["--destructive"],
-      colorBackground: currentVariables["--background"],
-      colorPrimary: currentVariables["--primary"],
-      colorText: currentVariables["--foreground"],
-      colorTextSecondary: currentVariables["--secondary-foreground"],
-      colorTextPlaceholder: currentVariables["--muted-foreground"],
+      colorDanger: formatColor(currentVariables["--destructive"]),
+      colorBackground: formatColor(currentVariables["--background"]),
+      colorPrimary: formatColor(currentVariables["--primary"]),
+      colorText: formatColor(currentVariables["--foreground"]),
+      colorTextSecondary: formatColor(
+        currentVariables["--secondary-foreground"]
+      ),
+      colorTextPlaceholder: formatColor(currentVariables["--muted-foreground"]),
     },
   };
 
