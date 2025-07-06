@@ -1,12 +1,13 @@
+import alias from "@rollup/plugin-alias";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { dirname, resolve as pathResolve } from "path";
+import path from "path";
 import postcss from "rollup-plugin-postcss";
 import { fileURLToPath } from "url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Custom plugin to handle "use client" directives
 const removeUseClientDirective = {
@@ -32,19 +33,26 @@ export default {
     },
   ],
   plugins: [
+    alias({
+      entries: [
+        {
+          find: /^@\/react\/(.*)/,
+          replacement: path.resolve(__dirname, "src/$1"),
+        },
+      ],
+    }),
     removeUseClientDirective,
     resolve({
-      extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
-      alias: {
-        "@/react": pathResolve(__dirname, "src"),
-      },
+      extensions: [".js", ".jsx", ".ts", ".tsx", ".json", ".css"],
       browser: true,
       preferBuiltins: false,
     }),
     commonjs({
       include: /node_modules/,
     }),
-    typescript(),
+    typescript({
+      tsconfig: "./tsconfig.json",
+    }),
     json({
       include: "**/*.json",
       preferConst: true,

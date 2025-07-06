@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 // @ts-expect-error - globals.css is a valid CSS file
-import globalsCss from "@/react/globals.css?inline";
+import globalsCss from "@/react/globals.css";
 import { Toaster } from "./ui/sonner";
 
 interface ShadowWrapperProps {
