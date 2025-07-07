@@ -1,3 +1,4 @@
+import { AddressInput } from "@/react/components/compounds/form/address-input";
 import InputGroup from "@/react/components/compounds/form/input-group";
 import SubmitButton from "@/react/components/compounds/form/submit-button";
 import { Form } from "@/react/components/ui/form";
@@ -5,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { type CustomerFormData, customerSchema } from "../../checkout-schema";
-import AddressInput from "./address-input";
 
 interface CustomerFormProps {
   initialData?: CustomerFormData;
@@ -27,7 +27,8 @@ export default function CustomerForm({
         line1: "",
         line2: "",
         city: "",
-        state: "",
+        province: "",
+        provinceCode: "",
         zipCode: "",
         country: "United States",
       },
@@ -40,7 +41,7 @@ export default function CustomerForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid gap-6 md:grid-cols-2"
+        className="grid gap-5 md:grid-cols-2"
       >
         <div className="md:col-span-2">
           <h2>{t("CheckoutEmbed.CustomerForm.title")}</h2>
@@ -50,7 +51,6 @@ export default function CustomerForm({
           className="md:col-span-2"
           name="email"
           label={t("CheckoutEmbed.CustomerForm.email")}
-          placeholder={t("CheckoutEmbed.CustomerForm.emailPlaceholder")}
           type="email"
           autoComplete="email"
         />
@@ -58,23 +58,20 @@ export default function CustomerForm({
         <InputGroup
           name="firstName"
           label={t("CheckoutEmbed.CustomerForm.firstName")}
-          placeholder={t("CheckoutEmbed.CustomerForm.firstNamePlaceholder")}
           autoComplete="given-name"
         />
 
         <InputGroup
           name="lastName"
           label={t("CheckoutEmbed.CustomerForm.lastName")}
-          placeholder={t("CheckoutEmbed.CustomerForm.lastNamePlaceholder")}
           autoComplete="family-name"
         />
 
-        <AddressInput />
+        <AddressInput className="md:col-span-2" />
 
         <InputGroup
           name="phone"
           label={t("CheckoutEmbed.CustomerForm.phone")}
-          placeholder={t("CheckoutEmbed.CustomerForm.phonePlaceholder")}
           type="tel"
           autoComplete="tel"
         />

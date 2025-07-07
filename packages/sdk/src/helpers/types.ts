@@ -1,8 +1,13 @@
-export type AutocompleteResult = {
-  line1: string;
-  line2: string;
-  city: string;
-  state: string;
-  countryCode: string;
-  zipCode: string;
-};
+import { Address } from "../types";
+
+export type AutocompleteAddressResult = Pick<
+  Address,
+  | "line1"
+  | "line2"
+  | "city"
+  | "province"
+  | "provinceCode"
+  | "country"
+  | "countryCode"
+  | "zipCode"
+>;

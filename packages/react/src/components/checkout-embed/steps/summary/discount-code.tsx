@@ -1,6 +1,6 @@
+import { FloatingLabel } from "@/react/components/compounds/form/floating-label";
 import SubmitButton from "@/react/components/compounds/form/submit-button";
 import { Input } from "@/react/components/ui/input";
-import { Label } from "@/react/components/ui/label";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ export default function DiscountCode({
   const [discountCode, setDiscountCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
 
   const isValid = discountCode.length > 0;
 
@@ -36,20 +37,27 @@ export default function DiscountCode({
 
   return (
     <form className="pb-1" onSubmit={handleSubmit}>
-      <Label className="mb-2 text-sm font-medium">
-        {t("CheckoutEmbed.Summary.discountCodeLabel")}
-      </Label>
       <div className="flex items-center gap-2">
-        <Input
-          aria-invalid={!!error}
-          value={discountCode}
-          onChange={(e) => {
-            setError("");
-            setDiscountCode(e.target.value);
-          }}
-          name="discountCode"
-          placeholder={t("CheckoutEmbed.Summary.discountCodePlaceholder")}
-        />
+        <div className="relative w-full">
+          <FloatingLabel
+            isFormLabel={false}
+            value={discountCode}
+            isFocused={isFocused}
+          >
+            {t("CheckoutEmbed.Summary.discountCodeLabel")}
+          </FloatingLabel>
+          <Input
+            aria-invalid={!!error}
+            value={discountCode}
+            onChange={(e) => {
+              setError("");
+              setDiscountCode(e.target.value);
+            }}
+            name="discountCode"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+        </div>
         <SubmitButton isSubmitting={isLoading} isValid={isValid} type="submit">
           {t("CheckoutEmbed.Summary.discountCodeApply")}
         </SubmitButton>

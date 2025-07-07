@@ -1,14 +1,15 @@
 export type Address = {
   name: string;
-  company?: string;
+  phone: string;
+
   line1: string;
   line2?: string;
   city: string;
-  state?: string;
+  province?: string;
+  provinceCode?: string;
   country: string;
   countryCode: string;
   zipCode: string;
-  phone: string;
 };
 
 export interface CustomerCreateParams {

@@ -13,13 +13,14 @@ export const customerSchema = z.object({
     line1: z.string().min(1, "required_error"),
     line2: z.string().optional(),
     city: z.string().min(1, "required_error"),
-    state: z.string().optional(),
+    province: z.string().optional(),
+    provinceCode: z.string().optional(),
     zipCode: z.string().min(5, "invalid_zipCode"),
     country: z.string().min(1, "required_error"),
     countryCode: z.string().min(1, "required_error"),
   }),
-  saveInfo: z.boolean().optional(),
   phone: z.string().regex(phoneRegex, "invalid_phone"),
+  isEmailSubscribed: z.boolean().optional(),
 });
 
 // Shipping method schema

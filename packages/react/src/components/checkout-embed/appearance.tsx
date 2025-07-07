@@ -3,7 +3,6 @@ import {
   StripeElementsOptions,
 } from "@stripe/stripe-js";
 import { useEffect } from "react";
-import { appearance as stripeAppearance } from "../payment-element/appearance";
 
 export type Themes = "dark" | "light";
 export type Fonts = StripeElementsOptions["fonts"];
@@ -25,6 +24,11 @@ export type AppearanceConfig = {
     destructive?: string;
     border?: string;
     ring?: string;
+    input?: string;
+    card?: string;
+    cardForeground?: string;
+    popover?: string;
+    popoverForeground?: string;
   };
 };
 
@@ -162,9 +166,11 @@ const getColorVariablesFromAppearanceConfig = (
   const fallbackColors = {
     background: isDark ? "oklch(0.145 0 0)" : "oklch(1 0 0)",
     foreground: isDark ? "oklch(0.985 0 0)" : "oklch(0.145 0 0)",
-    card: isDark ? "oklch(0.145 0 0)" : "oklch(1 0 0)",
+    card: isDark ? "oklch(0.205 0 0)" : "oklch(1 0 0)",
     cardForeground: isDark ? "oklch(0.985 0 0)" : "oklch(0.145 0 0)",
-    primary: isDark ? "oklch(0.985 0 0)" : "oklch(0.205 0 0)",
+    popover: isDark ? "oklch(0.205 0 0)" : "oklch(1 0 0)",
+    popoverForeground: isDark ? "oklch(0.985 0 0)" : "oklch(0.145 0 0)",
+    primary: isDark ? "oklch(0.922 0 0)" : "oklch(0.205 0 0)",
     primaryForeground: isDark ? "oklch(0.205 0 0)" : "oklch(0.985 0 0)",
     secondary: isDark ? "oklch(0.269 0 0)" : "oklch(0.97 0 0)",
     secondaryForeground: isDark ? "oklch(0.985 0 0)" : "oklch(0.205 0 0)",
@@ -173,32 +179,29 @@ const getColorVariablesFromAppearanceConfig = (
     accent: isDark ? "oklch(0.269 0 0)" : "oklch(0.97 0 0)",
     accentForeground: isDark ? "oklch(0.985 0 0)" : "oklch(0.205 0 0)",
     destructive: isDark
-      ? "oklch(0.396 0.141 25.723)"
+      ? "oklch(0.704 0.191 22.216)"
       : "oklch(0.577 0.245 27.325)",
     destructiveForeground: isDark
       ? "oklch(0.637 0.237 25.331)"
       : "oklch(0.577 0.245 27.325)",
-    border: isDark ? "oklch(0.269 0 0)" : "oklch(0.922 0 0)",
-    ring: isDark ? "oklch(0.439 0 0)" : "oklch(0.708 0 0)",
-    sidebar: isDark ? "oklch(0.205 0 0)" : "oklch(0.985 0 0)",
-    sidebarForeground: isDark ? "oklch(0.985 0 0)" : "oklch(0.145 0 0)",
-    sidebarPrimary: isDark ? "oklch(0.488 0.243 264.376)" : "oklch(0.205 0 0)",
-    sidebarPrimaryForeground: isDark ? "oklch(0.985 0 0)" : "oklch(0.985 0 0)",
+    border: isDark ? "oklch(1 0 0 / 10%)" : "oklch(0.922 0 0)",
+    ring: isDark ? "oklch(0.556 0 0)" : "oklch(0.708 0 0)",
+    input: isDark ? "oklch(1 0 0 / 15%)" : "oklch(0.922 0 0)",
   };
 
   const colors = {
     "--background": appearance?.colors?.background ?? fallbackColors.background,
     "--foreground": appearance?.colors?.foreground ?? fallbackColors.foreground,
 
-    // Card (reusing background/foreground)
-    "--card": appearance?.colors?.background ?? fallbackColors.card,
+    // Card
+    "--card": appearance?.colors?.card ?? fallbackColors.card,
     "--card-foreground":
-      appearance?.colors?.foreground ?? fallbackColors.cardForeground,
+      appearance?.colors?.cardForeground ?? fallbackColors.cardForeground,
 
-    // Popover (reusing background/foreground)
-    "--popover": appearance?.colors?.background ?? fallbackColors.background,
+    // Popover
+    "--popover": appearance?.colors?.popover ?? fallbackColors.popover,
     "--popover-foreground":
-      appearance?.colors?.foreground ?? fallbackColors.foreground,
+      appearance?.colors?.popoverForeground ?? fallbackColors.popoverForeground,
 
     // Primary
     "--primary": appearance?.colors?.primary ?? fallbackColors.primary,
@@ -228,23 +231,8 @@ const getColorVariablesFromAppearanceConfig = (
 
     // Border and Input
     "--border": appearance?.colors?.border ?? fallbackColors.border,
-    "--input": appearance?.colors?.border ?? fallbackColors.border,
+    "--input": appearance?.colors?.input ?? fallbackColors.input,
     "--ring": appearance?.colors?.ring ?? fallbackColors.ring,
-
-    // Sidebar
-    "--sidebar": appearance?.colors?.background ?? fallbackColors.sidebar,
-    "--sidebar-foreground":
-      appearance?.colors?.foreground ?? fallbackColors.sidebarForeground,
-    "--sidebar-primary":
-      appearance?.colors?.primary ?? fallbackColors.sidebarPrimary,
-    "--sidebar-primary-foreground":
-      appearance?.colors?.primaryForeground ??
-      fallbackColors.sidebarPrimaryForeground,
-    "--sidebar-accent": appearance?.colors?.accent ?? fallbackColors.accent,
-    "--sidebar-accent-foreground":
-      appearance?.colors?.accentForeground ?? fallbackColors.accentForeground,
-    "--sidebar-border": appearance?.colors?.border ?? fallbackColors.border,
-    "--sidebar-ring": appearance?.colors?.ring ?? fallbackColors.ring,
   };
 
   return colors;
@@ -306,7 +294,7 @@ export const convertCheckoutAppearanceToStripeAppearance = (
 
       fontFamily: fonts
         ? currentVariables["--font-sans"]
-        : stripeAppearance.variables.fontFamily,
+        : '-apple-system, BlinkMacSystemFont, "Gill Sans", sans-serif',
       borderRadius: currentVariables["--radius"],
       // colorSuccess: currentVariables["--success"],
       // colorWarning: currentVariables["--warning"],

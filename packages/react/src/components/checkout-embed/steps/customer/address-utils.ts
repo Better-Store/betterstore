@@ -1,7 +1,7 @@
 import { CustomerFormData } from "../../checkout-schema";
 
 export const formatAddress = (address: CustomerFormData["address"]): string => {
-  const partWithoutComma = [address.state, address.zipCode]
+  const partWithoutComma = [address.province, address.zipCode]
     .filter(Boolean)
     .join(" ");
 
