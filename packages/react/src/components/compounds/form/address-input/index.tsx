@@ -4,13 +4,9 @@ import { CustomerFormData } from "@/react/components/checkout-embed/checkout-sch
 import InputGroup from "@/react/components/compounds/form/input-group";
 import SelectGroup from "@/react/components/compounds/form/select-group";
 import { cn } from "@/react/lib/utils";
-import {
-  AutosuggestAddressResult,
-  createStoreClient,
-  GeocodeAddressResult,
-} from "@betterstore/sdk";
+import { AutosuggestAddressResult, createStoreClient } from "@betterstore/sdk";
 import { countries } from "country-data-list";
-import { ChevronRight, Plus, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import CountryInput from "../country-input";
@@ -36,6 +32,7 @@ interface AddressInputProps {
   latitude?: number;
   longitude?: number;
   currentAlpha2CountryCode?: string;
+  locale?: string;
 }
 
 export function AddressInput({
@@ -45,19 +42,21 @@ export function AddressInput({
   latitude,
   longitude,
   currentAlpha2CountryCode,
+  locale,
 }: AddressInputProps) {
   const storeClient = createStoreClient({ proxy });
   const form = useFormContext<CustomerFormData>();
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showAllInputs, setShowAllInputs] = useState(false);
   const [showApartmentField, setShowApartmentField] = useState(false);
-  const [suggestions, setSuggestions] = useState<
-    (AutosuggestAddressResult | GeocodeAddressResult)[]
-  >([]);
+  const [suggestions, setSuggestions] = useState<AutosuggestAddressResult[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
 
   const addressInput = form.watch("address.line1") || "";
   const cityInput = form.watch("address.city") || "";
+  const line2Input = form.watch("address.line2") || "";
 
   useEffect(() => {
     if (!currentAlpha2CountryCode) return;
@@ -92,6 +91,7 @@ export function AddressInput({
               latitude: latitude?.toString(),
               longitude: longitude?.toString(),
               countryCode,
+              locale,
             }
           );
           console.log(results);
@@ -116,31 +116,14 @@ export function AddressInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showAllInputs, addressInput]);
 
-  const handleSelectAddress = (
-    address: AutosuggestAddressResult | GeocodeAddressResult
-  ) => {
-    const isLookup = "line1" in address;
-
-    if (!isLookup) {
-      setIsLoading(true);
-      storeClient
-        .getGeocodeAddressResults(clientSecret, address)
-        .then((results) => {
-          console.log(results);
-          setIsLoading(false);
-          setShowSuggestions(false);
-          setSuggestions(results);
-        });
-      return;
-    }
-
-    const geocodeAddress = address;
-    form.setValue("address.line1", geocodeAddress.line1);
-    form.setValue("address.line2", geocodeAddress.line2);
-    form.setValue("address.city", geocodeAddress.city);
-    form.setValue("address.province", geocodeAddress.province);
-    form.setValue("address.provinceCode", geocodeAddress.provinceCode);
-    form.setValue("address.zipCode", geocodeAddress.zipCode);
+  const handleSelectAddress = (result: AutosuggestAddressResult) => {
+    const { address } = result;
+    form.setValue("address.line1", address.line1);
+    form.setValue("address.line2", address.line2);
+    form.setValue("address.city", address.city);
+    form.setValue("address.province", address.province);
+    form.setValue("address.provinceCode", address.provinceCode);
+    form.setValue("address.zipCode", address.zipCode);
 
     setShowSuggestions(false);
     setShowAllInputs(true);
@@ -149,11 +132,27 @@ export function AddressInput({
 
   const handleManualEntry = () => {
     setShowAllInputs(true);
+    form.resetField("address.line1");
+    form.resetField("address.line2");
+    form.resetField("address.city");
+    form.resetField("address.province");
+    form.resetField("address.provinceCode");
+    form.resetField("address.zipCode");
   };
 
   useEffect(() => {
-    setShowAllInputs(cityInput?.length > 0);
+    if (!showAllInputs) {
+      setShowAllInputs(cityInput?.length > 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cityInput]);
+
+  useEffect(() => {
+    if (!showApartmentField) {
+      setShowApartmentField(line2Input.length > 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [line2Input]);
 
   return (
     <div className={cn("space-y-5", className)}>
@@ -168,7 +167,7 @@ export function AddressInput({
           icon={<Search className="h-4 w-4" />}
           showIcon={!showAllInputs}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 50)}
         />
 
         {/* Suggestions Dropdown */}
@@ -187,24 +186,18 @@ export function AddressInput({
                   Keep typing address to display results
                 </div>
                 <div className="max-h-60 overflow-y-auto">
-                  {suggestions.map((address, index) => {
-                    const isLookup = "line1" in address;
-                    return (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => handleSelectAddress(address)}
-                        className="hover:bg-accent border-border flex w-full cursor-pointer items-center border-b px-3 py-3 text-left transition-colors last:border-b-0"
-                      >
-                        <div className="text-foreground text-sm">
-                          {address.title}
-                        </div>
-                        {!isLookup && (
-                          <ChevronRight className="text-muted-foreground ml-auto size-4" />
-                        )}
-                      </button>
-                    );
-                  })}
+                  {suggestions.map((address, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleSelectAddress(address)}
+                      className="hover:bg-accent border-border flex w-full cursor-pointer items-center border-b px-3 py-3 text-left transition-colors last:border-b-0"
+                    >
+                      <div className="text-foreground text-sm">
+                        {address.title}
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </>
             ) : (

@@ -330,6 +330,7 @@ export default function CheckoutForm({
         latitude={latitude}
         longitude={longitude}
         currentAlpha2CountryCode={currentAlpha2CountryCode}
+        locale={locale}
       />
     );
   };

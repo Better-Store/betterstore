@@ -15,6 +15,7 @@ interface CustomerFormProps {
   latitude?: number;
   longitude?: number;
   currentAlpha2CountryCode?: string;
+  locale?: string;
 }
 
 export default function CustomerForm({
@@ -25,6 +26,7 @@ export default function CustomerForm({
   latitude,
   longitude,
   currentAlpha2CountryCode,
+  locale,
 }: CustomerFormProps) {
   const { t } = useTranslation();
   const form = useForm<CustomerFormData>({
@@ -84,6 +86,7 @@ export default function CustomerForm({
           latitude={latitude}
           longitude={longitude}
           currentAlpha2CountryCode={currentAlpha2CountryCode}
+          locale={locale}
         />
 
         <InputGroup

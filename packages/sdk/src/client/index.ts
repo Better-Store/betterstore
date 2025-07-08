@@ -9,7 +9,7 @@ import {
   CustomerUpdateParams,
 } from "../customer/types";
 import { ApiError, createApiClient } from "../utils/axios";
-import { AutosuggestAddressResult, GeocodeAddressResult } from "./types";
+import { AutosuggestAddressResult } from "./types";
 
 class Client {
   public proxy?: string;
@@ -275,32 +275,6 @@ class Client {
     const apiClient = createApiClient(clientSecret, this.proxy);
     const { data } = await apiClient.get("/helpers/autosuggest-address", {
       params,
-    });
-
-    return data;
-  }
-
-  /**
-   * Get geocode address results
-   */
-  async getGeocodeAddressResults(
-    clientSecret: string,
-    params: {
-      id: string;
-      title: string;
-      position: AutosuggestAddressResult["position"];
-      countryCode: string;
-      locale?: string;
-    }
-  ): Promise<GeocodeAddressResult[]> {
-    const apiClient = createApiClient(clientSecret, this.proxy);
-    const { position, ...rest } = params;
-    const { data } = await apiClient.get("/helpers/geocode-address", {
-      params: {
-        ...rest,
-        lat: position.lat,
-        lng: position.lng,
-      },
     });
 
     return data;
