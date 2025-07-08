@@ -273,15 +273,9 @@ class Client {
     }
   ): Promise<AutosuggestAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data, ...rest } = await apiClient.get(
-      "/helpers/autosuggest-address",
-      {
-        params,
-      }
-    );
-
-    console.log("autosuggest data", data);
-    console.log("autosuggest rest", rest);
+    const { data } = await apiClient.get("/helpers/autosuggest-address", {
+      params,
+    });
 
     return data;
   }
@@ -292,17 +286,20 @@ class Client {
   async getGeocodeAddressResults(
     clientSecret: string,
     params: {
-      selectedStreetId: string;
+      id: string;
+      title: string;
       position: AutosuggestAddressResult["position"];
     }
   ): Promise<GeocodeAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data, ...rest } = await apiClient.get("/helpers/geocode-address", {
-      params,
+    const { position, ...rest } = params;
+    const { data } = await apiClient.get("/helpers/geocode-address", {
+      params: {
+        ...rest,
+        lat: position.lat,
+        lng: position.lng,
+      },
     });
-
-    console.log("geocode data", data);
-    console.log("geocode rest", rest);
 
     return data;
   }

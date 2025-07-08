@@ -125,10 +125,7 @@ export function AddressInput({
     if (!isLookup) {
       setIsLoading(true);
       storeClient
-        .getGeocodeAddressResults(clientSecret, {
-          selectedStreetId: address.id,
-          position: address.position,
-        })
+        .getGeocodeAddressResults(clientSecret, address)
         .then((results) => {
           console.log(results);
         });

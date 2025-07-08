@@ -4,8 +4,8 @@ export type AutosuggestAddressResult = {
   id: string;
   title: string;
   position: {
-    latitude: number;
-    longitude: number;
+    lat: number;
+    lng: number;
   };
 };
 
