@@ -40,7 +40,7 @@ interface CheckoutFormProps {
   clientProxy?: string;
   latitude?: number;
   longitude?: number;
-  currentAlpha2CountryCode?: string;
+  currentAlpha3CountryCode?: string;
 }
 
 export default function CheckoutForm({
@@ -63,7 +63,7 @@ export default function CheckoutForm({
   clientProxy,
   latitude,
   longitude,
-  currentAlpha2CountryCode,
+  currentAlpha3CountryCode,
 }: CheckoutFormProps) {
   const {
     formData,
@@ -329,7 +329,7 @@ export default function CheckoutForm({
         clientSecret={clientSecret}
         latitude={latitude}
         longitude={longitude}
-        currentAlpha2CountryCode={currentAlpha2CountryCode}
+        currentAlpha3CountryCode={currentAlpha3CountryCode}
         locale={locale}
       />
     );

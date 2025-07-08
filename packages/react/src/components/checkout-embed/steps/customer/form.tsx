@@ -14,7 +14,7 @@ interface CustomerFormProps {
   clientSecret: string;
   latitude?: number;
   longitude?: number;
-  currentAlpha2CountryCode?: string;
+  currentAlpha3CountryCode?: string;
   locale?: string;
 }
 
@@ -25,7 +25,7 @@ export default function CustomerForm({
   clientSecret,
   latitude,
   longitude,
-  currentAlpha2CountryCode,
+  currentAlpha3CountryCode,
   locale,
 }: CustomerFormProps) {
   const { t } = useTranslation();
@@ -46,7 +46,6 @@ export default function CustomerForm({
       },
       phone: "",
     },
-    mode: "onBlur",
   });
 
   return (
@@ -85,7 +84,7 @@ export default function CustomerForm({
           clientSecret={clientSecret}
           latitude={latitude}
           longitude={longitude}
-          currentAlpha2CountryCode={currentAlpha2CountryCode}
+          currentAlpha3CountryCode={currentAlpha3CountryCode}
           locale={locale}
         />
 

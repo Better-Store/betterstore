@@ -1,5 +1,5 @@
 export const countryProvinces = {
-  us: [
+  USA: [
     { name: "Alabama", code: "AL" },
     { name: "Alaska", code: "AK" },
     { name: "Arizona", code: "AZ" },

@@ -1,15 +1,15 @@
 "use client";
 
 import { CustomerFormData } from "@/react/components/checkout-embed/checkout-schema";
+import CompoboxGroupProps from "@/react/components/compounds/form/compobox-group";
 import InputGroup from "@/react/components/compounds/form/input-group";
-import SelectGroup from "@/react/components/compounds/form/select-group";
 import { cn } from "@/react/lib/utils";
 import { AutosuggestAddressResult, createStoreClient } from "@betterstore/sdk";
-import { countries } from "country-data-list";
-import { Plus, Search } from "lucide-react";
+import { ArrowRight, Loader, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import CountryInput from "../country-input";
+import { getCountriesByLocale } from "./country-data";
 import { countriesWithProvinces, countryProvinces } from "./province-data";
 
 interface AddressInputProps {
@@ -18,7 +18,7 @@ interface AddressInputProps {
   clientSecret: string;
   latitude?: number;
   longitude?: number;
-  currentAlpha2CountryCode?: string;
+  currentAlpha3CountryCode?: string;
   locale?: string;
 }
 
@@ -28,7 +28,7 @@ export function AddressInput({
   clientSecret,
   latitude,
   longitude,
-  currentAlpha2CountryCode,
+  currentAlpha3CountryCode,
   locale,
 }: AddressInputProps) {
   const storeClient = createStoreClient({ proxy });
@@ -40,12 +40,15 @@ export function AddressInput({
     []
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingLookup, setIsLoadingLookup] = useState(false);
 
   const addressInput = form.watch("address.line1") || "";
   const cityInput = form.watch("address.city") || "";
   const countryCodeInput = form.watch("address.countryCode");
 
-  const renderProvinceInput: boolean =
+  const countries = getCountriesByLocale(locale);
+
+  const renderProvinceInput =
     countriesWithProvinces.includes(countryCodeInput) &&
     countryProvinces[countryCodeInput as keyof typeof countryProvinces]
       ?.length > 0;
@@ -54,20 +57,20 @@ export function AddressInput({
     : [];
 
   useEffect(() => {
-    if (!currentAlpha2CountryCode) return;
+    if (!currentAlpha3CountryCode) return;
 
-    const country = countries.all.find(
+    const country = countries.find(
       (country) =>
-        country.alpha2?.toLowerCase() ===
-        currentAlpha2CountryCode?.toLowerCase()
+        country.alpha3?.toLowerCase() ===
+        currentAlpha3CountryCode?.toLowerCase()
     );
 
     if (country) {
-      form.setValue("address.countryCode", country.alpha2);
+      form.setValue("address.countryCode", country.alpha3);
       form.setValue("address.country", country.name);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAlpha2CountryCode]);
+  }, [currentAlpha3CountryCode]);
 
   useEffect(() => {
     if (!showAllInputs && addressInput.length > 2) {
@@ -75,9 +78,7 @@ export function AddressInput({
 
       const fetchSuggestions = async () => {
         try {
-          const countryCode = countries.all.find(
-            (country) => country.alpha2 === form.watch("address.countryCode")
-          )?.alpha3;
+          const countryCode = form.watch("address.countryCode");
 
           const results = await storeClient.getAutosuggestAddressResults(
             clientSecret,
@@ -112,23 +113,27 @@ export function AddressInput({
   }, [showAllInputs, addressInput]);
 
   const handleSelectAddress = async (result: AutosuggestAddressResult) => {
-    setIsLoading(true);
+    setIsLoadingLookup(true);
 
-    const { address } = await storeClient.lookupAddress(clientSecret, {
-      id: result.id,
-      locale,
-    });
+    try {
+      const { address } = await storeClient.lookupAddress(clientSecret, {
+        id: result.id,
+        locale,
+      });
 
-    console.log(result);
-    form.setValue("address.line1", address.line1);
-    form.setValue("address.city", address.city);
-    form.setValue("address.province", address.province);
-    form.setValue("address.provinceCode", address.provinceCode);
-    form.setValue("address.zipCode", address.zipCode);
-
-    setShowSuggestions(false);
-    setShowAllInputs(true);
-    setSuggestions([]);
+      form.setValue("address.line1", address.line1);
+      form.setValue("address.city", address.city);
+      form.setValue("address.province", address.province);
+      form.setValue("address.provinceCode", address.provinceCode);
+      form.setValue("address.zipCode", address.zipCode);
+    } catch (error) {
+      console.error("Error looking up address:", error);
+    } finally {
+      setIsLoadingLookup(false);
+      setShowSuggestions(false);
+      setShowAllInputs(true);
+      setSuggestions([]);
+    }
   };
 
   const handleManualEntry = () => {
@@ -150,7 +155,12 @@ export function AddressInput({
 
   return (
     <div className={cn("space-y-5", className)}>
-      <CountryInput prefix="address" label="Country" form={form} />
+      <CountryInput
+        form={form}
+        prefix="address"
+        label="Country"
+        locale={locale}
+      />
 
       {/* Address Search Field */}
       <div className="relative">
@@ -161,46 +171,63 @@ export function AddressInput({
           icon={<Search className="h-4 w-4" />}
           showIcon={!showAllInputs}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
         />
 
         {/* Suggestions Dropdown */}
-        {!showAllInputs && (showSuggestions || isLoading) && (
-          <div
-            className="bg-background border-border absolute left-0 right-0 top-full z-50 mt-1 rounded-md border shadow-lg"
-            data-dropdown="suggestions"
-          >
-            {isLoading ? (
-              <div className="text-muted-foreground border-border border-b p-3 text-sm">
-                Searching for addresses...
-              </div>
-            ) : suggestions.length > 0 ? (
-              <>
-                <div className="text-muted-foreground border-border border-b p-3 text-sm">
-                  Keep typing address to display results
+        {!showAllInputs &&
+          (showSuggestions || isLoading || isLoadingLookup) && (
+            <div
+              className="bg-background border-border absolute left-0 right-0 top-full z-50 mt-1 rounded-md border shadow-lg"
+              data-dropdown="suggestions"
+            >
+              {isLoading || isLoadingLookup ? (
+                <div className="text-muted-foreground border-border flex gap-2 border-b p-3 text-sm">
+                  {isLoadingLookup
+                    ? "Loading address..."
+                    : "Searching for addresses..."}{" "}
+                  <Loader className="size-4 animate-spin" />
                 </div>
-                <div className="max-h-60 overflow-y-auto">
-                  {suggestions.map((address, index) => (
+              ) : suggestions.length > 0 ? (
+                <>
+                  <div className="text-muted-foreground border-border border-b p-3 text-sm">
+                    Keep typing address to display results
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {suggestions.map((address, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={async () => await handleSelectAddress(address)}
+                        className="hover:bg-accent border-border flex w-full cursor-pointer items-center border-b px-3 py-3 text-left transition-colors last:border-b-0"
+                      >
+                        <div className="text-foreground text-sm">
+                          {address.title}
+                        </div>
+                      </button>
+                    ))}
                     <button
-                      key={index}
                       type="button"
-                      onClick={() => handleSelectAddress(address)}
+                      onClick={handleManualEntry}
                       className="hover:bg-accent border-border flex w-full cursor-pointer items-center border-b px-3 py-3 text-left transition-colors last:border-b-0"
                     >
-                      <div className="text-foreground text-sm">
-                        {address.title}
+                      <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                        Input address manually <ArrowRight className="size-4" />
                       </div>
                     </button>
-                  ))}
+                  </div>
+                </>
+              ) : addressInput.length > 2 ? (
+                <div className="text-muted-foreground border-border border-b p-3 text-sm">
+                  Type more to display results
                 </div>
-              </>
-            ) : (
-              <div className="text-muted-foreground border-border border-b p-3 text-sm">
-                No addresses found
-              </div>
-            )}
-          </div>
-        )}
+              ) : (
+                <div className="text-muted-foreground border-border border-b p-3 text-sm">
+                  No addresses found
+                </div>
+              )}
+            </div>
+          )}
       </div>
 
       {/* Manual Entry Link */}
@@ -257,14 +284,15 @@ export function AddressInput({
         >
           <InputGroup name="address.city" label="City" required />
           {renderProvinceInput && (
-            <SelectGroup
+            <CompoboxGroupProps
+              form={form}
               name="address.provinceCode"
               label="Province"
               options={availableProvinces.map((state) => ({
                 value: state.code,
                 label: state.name,
               }))}
-              onChange={(value) => {
+              onSelect={(value) => {
                 const provinceName = availableProvinces.find(
                   (state) => state.code === value
                 )?.name;
@@ -273,6 +301,8 @@ export function AddressInput({
                   form.setValue("address.province", provinceName);
                 }
               }}
+              searchText="Search provinces..."
+              emptyText="No provinces found."
               required
             />
           )}

@@ -31,7 +31,7 @@ async function getIpInfo() {
   return {
     latitude: response.latitude ?? 52.52,
     longitude: response.longitude ?? 13.405,
-    countryCode: response.country_code ?? "us",
+    countryCodeIso3: response.country_code_iso3,
   };
 }
 
@@ -64,15 +64,15 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
 
   const [latitude, setLatitude] = useState<number | undefined>(undefined);
   const [longitude, setLongitude] = useState<number | undefined>(undefined);
-  const [currentAlpha2CountryCode, setCurrentAlpha2CountryCode] = useState<
+  const [currentAlpha3CountryCode, setCurrentAlpha3CountryCode] = useState<
     string | undefined
   >(undefined);
 
   useEffect(() => {
-    getIpInfo().then(({ latitude, longitude, countryCode }) => {
+    getIpInfo().then(({ latitude, longitude, countryCodeIso3 }) => {
       setLatitude(latitude);
       setLongitude(longitude);
-      setCurrentAlpha2CountryCode(countryCode);
+      setCurrentAlpha3CountryCode(countryCodeIso3);
     });
   }, []);
 
@@ -353,7 +353,7 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
               clientProxy={clientProxy}
               latitude={latitude}
               longitude={longitude}
-              currentAlpha2CountryCode={currentAlpha2CountryCode}
+              currentAlpha3CountryCode={currentAlpha3CountryCode}
             />
           )}
         </div>

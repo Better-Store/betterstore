@@ -273,7 +273,7 @@ class Client {
     }
   ): Promise<AutosuggestAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data } = await apiClient.get("/helpers/autosuggest-address", {
+    const { data } = await apiClient.get("/helpers/address/autosuggest", {
       params,
     });
 
@@ -288,7 +288,7 @@ class Client {
     }
   ): Promise<LookupAddressResult> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data } = await apiClient.get("/helpers/lookup-address", {
+    const { data } = await apiClient.get("/helpers/address/lookup", {
       params,
     });
 
