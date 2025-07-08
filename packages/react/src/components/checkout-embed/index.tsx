@@ -23,6 +23,18 @@ interface CheckoutEmbedProps {
   };
 }
 
+async function getIpInfo() {
+  const response = await fetch("https://ipapi.co/json").then((res) =>
+    res.json()
+  );
+
+  return {
+    latitude: response.latitude ?? 52.52,
+    longitude: response.longitude ?? 13.405,
+    countryCode: response.country_code ?? "us",
+  };
+}
+
 function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
   const {
     cancelUrl,
@@ -49,6 +61,20 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
 
   const [checkout, setCheckout] = useState<CheckoutSession | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [latitude, setLatitude] = useState<number | undefined>(undefined);
+  const [longitude, setLongitude] = useState<number | undefined>(undefined);
+  const [currentAlpha2CountryCode, setCurrentAlpha2CountryCode] = useState<
+    string | undefined
+  >(undefined);
+
+  useEffect(() => {
+    getIpInfo().then(({ latitude, longitude, countryCode }) => {
+      setLatitude(latitude);
+      setLongitude(longitude);
+      setCurrentAlpha2CountryCode(countryCode);
+    });
+  }, []);
 
   useEffect(() => {
     let mounted = true; // Add mounted flag for cleanup
@@ -324,6 +350,10 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
               publicKey={publicKey}
               paymentSecret={paymentSecret}
               paymentComponentKey={paymentComponentKey}
+              clientProxy={clientProxy}
+              latitude={latitude}
+              longitude={longitude}
+              currentAlpha2CountryCode={currentAlpha2CountryCode}
             />
           )}
         </div>

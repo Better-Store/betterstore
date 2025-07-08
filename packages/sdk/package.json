@@ -1,6 +1,6 @@
 {
   "name": "@betterstore/sdk",
-  "version": "0.5.9",
+  "version": "0.5.11",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",

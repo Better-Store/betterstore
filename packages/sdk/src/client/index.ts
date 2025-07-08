@@ -9,6 +9,7 @@ import {
   CustomerUpdateParams,
 } from "../customer/types";
 import { ApiError, createApiClient } from "../utils/axios";
+import { AutosuggestAddressResult, LookupAddressResult } from "./types";
 
 class Client {
   public proxy?: string;
@@ -232,6 +233,68 @@ class Client {
       console.error(`Customer with id ${customerId} not found`);
       return null;
     }
+
+    return data;
+  }
+
+  /**
+   * Get exchange rate for a currency
+   */
+  async getExchangeRate(
+    clientSecret: string,
+    baseCurrency: string,
+    targetCurrency: string
+  ): Promise<number> {
+    const apiClient = createApiClient(clientSecret, this.proxy);
+    const { data } = await apiClient.get(`/helpers/rates/${baseCurrency}`);
+
+    const rate = data.rates[targetCurrency];
+
+    if (!rate) {
+      throw new Error("Could not get exchange rate for target currency");
+    }
+
+    return rate;
+  }
+
+  /**
+   * Get autosuggest address results
+   */
+  async getAutosuggestAddressResults(
+    clientSecret: string,
+    params: {
+      query: string;
+      locale?: string;
+      latitude?: string;
+      longitude?: string;
+      countryCode?: string;
+    }
+  ): Promise<AutosuggestAddressResult[]> {
+    const apiClient = createApiClient(clientSecret, this.proxy);
+    const { data } = await apiClient.get("/helpers/autosuggest-address", {
+      params,
+    });
+
+    return data;
+  }
+
+  /**
+   * Get lookup address results
+   */
+  async getLookupAddressResults(
+    clientSecret: string,
+    params: {
+      query: string;
+      locale?: string;
+      latitude?: string;
+      longitude?: string;
+      countryCode?: string;
+    }
+  ): Promise<LookupAddressResult[]> {
+    const apiClient = createApiClient(clientSecret, this.proxy);
+    const { data } = await apiClient.get("/helpers/lookup-address", {
+      params,
+    });
 
     return data;
   }

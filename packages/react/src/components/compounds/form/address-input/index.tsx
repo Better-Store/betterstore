@@ -1,12 +1,11 @@
 "use client";
 
 import { CustomerFormData } from "@/react/components/checkout-embed/checkout-schema";
-import { formatAddress } from "@/react/components/checkout-embed/steps/customer/address-utils";
 import InputGroup from "@/react/components/compounds/form/input-group";
 import SelectGroup from "@/react/components/compounds/form/select-group";
-import { storeHelpers } from "@/react/lib/betterstore";
 import { cn } from "@/react/lib/utils";
-import { AutocompleteAddressResult } from "@betterstore/sdk";
+import { AutosuggestAddressResult, createStoreClient } from "@betterstore/sdk";
+import { countries } from "country-data-list";
 import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -28,32 +27,73 @@ const stateOptions = [
 
 interface AddressInputProps {
   className?: string;
+  proxy?: string;
+  clientSecret: string;
+  latitude?: number;
+  longitude?: number;
+  currentAlpha2CountryCode?: string;
 }
 
-export function AddressInput({ className = "" }: AddressInputProps) {
-  const { watch, setValue, setFocus } = useFormContext<CustomerFormData>();
+export function AddressInput({
+  className = "",
+  proxy,
+  clientSecret,
+  latitude,
+  longitude,
+  currentAlpha2CountryCode,
+}: AddressInputProps) {
+  const storeClient = createStoreClient({ proxy });
+  const form = useFormContext<CustomerFormData>();
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [showAllInputs, setShowAllInputs] = useState(false);
   const [showApartmentField, setShowApartmentField] = useState(false);
-  const [suggestions, setSuggestions] = useState<AutocompleteAddressResult[]>(
+  const [suggestions, setSuggestions] = useState<AutosuggestAddressResult[]>(
     []
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  const addressInput = watch("address.line1") || "";
-  const cityInput = watch("address.city") || "";
+  const addressInput = form.watch("address.line1") || "";
+  const cityInput = form.watch("address.city") || "";
 
   useEffect(() => {
-    if (!showAllInputs && addressInput.length > 0) {
+    if (!currentAlpha2CountryCode) return;
+
+    const country = countries.all.find(
+      (country) =>
+        country.alpha2?.toLowerCase() ===
+        currentAlpha2CountryCode?.toLowerCase()
+    );
+
+    if (country) {
+      form.setValue("address.countryCode", country.alpha2);
+      form.setValue("address.country", country.name);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAlpha2CountryCode]);
+
+  useEffect(() => {
+    if (!showAllInputs && addressInput.length > 2) {
       setIsLoading(true);
 
       const fetchSuggestions = async () => {
         try {
-          const results =
-            await storeHelpers.getAutocompleteAddressResults(addressInput);
+          const countryCode = countries.all.find(
+            (country) => country.alpha2 === form.watch("address.countryCode")
+          )?.alpha3;
+
+          const results = await storeClient.getAutosuggestAddressResults(
+            clientSecret,
+            {
+              query: addressInput,
+              latitude: latitude?.toString(),
+              longitude: longitude?.toString(),
+              countryCode,
+            }
+          );
+          console.log(results);
+
           setShowSuggestions(results.length > 0);
           setSuggestions(results);
-          console.log(results);
         } catch (error) {
           console.error("Error fetching address suggestions:", error);
           setShowSuggestions(false);
@@ -69,17 +109,21 @@ export function AddressInput({ className = "" }: AddressInputProps) {
       setSuggestions([]);
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showAllInputs, addressInput]);
 
-  const handleSelectAddress = (address: AutocompleteAddressResult) => {
+  const handleSelectAddress = (address: AutosuggestAddressResult) => {
+    console.log(address);
+
     // Set all address fields from the selected address
-    setValue("address.line1", address.line1);
-    setValue("address.city", address.city);
-    setValue("address.country", address.country);
-    setValue("address.countryCode", address.countryCode);
-    setValue("address.province", address.province);
-    setValue("address.provinceCode", address.provinceCode);
-    setValue("address.zipCode", address.zipCode);
+    // form.setValue("address.line1", address.line1);
+    // form.setValue("address.line2", address.line2);
+    // form.setValue("address.city", address.city);
+    // form.setValue("address.country", address.country);
+    // form.setValue("address.countryCode", address.countryCode);
+    // form.setValue("address.province", address.province);
+    // form.setValue("address.provinceCode", address.provinceCode);
+    // form.setValue("address.zipCode", address.zipCode);
     setShowSuggestions(false);
   };
 
@@ -92,8 +136,8 @@ export function AddressInput({ className = "" }: AddressInputProps) {
   }, [cityInput]);
 
   return (
-    <div className={cn("space-y-4", className)}>
-      <CountryInput prefix="address" label="Country" />
+    <div className={cn("space-y-5", className)}>
+      <CountryInput prefix="address" label="Country" form={form} />
 
       {/* Address Search Field */}
       <div className="relative">
@@ -125,7 +169,7 @@ export function AddressInput({ className = "" }: AddressInputProps) {
                       className="hover:bg-accent border-border flex w-full items-center border-b px-3 py-3 text-left transition-colors last:border-b-0"
                     >
                       <div className="text-foreground text-sm">
-                        {formatAddress(address)}
+                        {address.title}
                       </div>
                     </button>
                   ))}
@@ -141,7 +185,7 @@ export function AddressInput({ className = "" }: AddressInputProps) {
       </div>
 
       {/* Manual Entry Link */}
-      <div className={cn(!showAllInputs ? "-mt-1 block" : "hidden")}>
+      <div className={cn(!showAllInputs ? "-mt-2 mb-4 block" : "hidden")}>
         <button
           type="button"
           onClick={handleManualEntry}
@@ -164,7 +208,7 @@ export function AddressInput({ className = "" }: AddressInputProps) {
             type="button"
             onClick={() => {
               setShowApartmentField(true);
-              setFocus("address.line2");
+              form.setFocus("address.line2");
             }}
             className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-2 text-sm transition-colors"
           >

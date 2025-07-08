@@ -1,6 +1,3 @@
-import { createApiClient } from "../utils/axios";
-import { AutocompleteAddressResult } from "./types";
-
 const currencyLocales: Record<string, string> = {
   CZK: "cs-CZ", // Czech Koruna
   USD: "en-US", // US Dollar
@@ -76,37 +73,6 @@ class Helpers {
     }).format(amount);
 
     return formattedPrice;
-  }
-
-  async getExchangeRate(
-    baseCurrency: string,
-    targetCurrency: string
-  ): Promise<number> {
-    const apiClient = createApiClient("", this.proxy);
-    const { data } = await apiClient.get(`/helpers/rates/${baseCurrency}`);
-
-    const rate = data.rates[targetCurrency];
-
-    if (!rate) {
-      throw new Error("Could not get exchange rate for target currency");
-    }
-
-    return rate;
-  }
-
-  async getAutocompleteAddressResults(
-    query: string,
-    locale?: string
-  ): Promise<AutocompleteAddressResult[]> {
-    const apiClient = createApiClient("", this.proxy);
-    const { data } = await apiClient.get("/helpers/autocomplete-address", {
-      params: {
-        locale,
-        query,
-      },
-    });
-
-    return data;
   }
 }
 

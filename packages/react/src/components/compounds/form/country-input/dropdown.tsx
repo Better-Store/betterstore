@@ -20,6 +20,7 @@ import { cn } from "@/react/lib/utils";
 import { CheckIcon, ChevronDown } from "lucide-react";
 
 import { countries } from "country-data-list";
+import { UseFormReturn, useWatch } from "react-hook-form";
 
 export interface Country {
   alpha2: string;
@@ -42,6 +43,7 @@ interface CountryDropdownProps {
   placeholder?: string;
   slim?: boolean;
   onOpenChange?: (open: boolean) => void;
+  form: UseFormReturn<any>;
 }
 
 const CountryDropdownComponent = (
@@ -54,6 +56,7 @@ const CountryDropdownComponent = (
     defaultValue,
     disabled = false,
     slim = false,
+    form,
     ...props
   }: CountryDropdownProps,
   ref: React.ForwardedRef<HTMLButtonElement>
@@ -62,6 +65,25 @@ const CountryDropdownComponent = (
   const [selectedCountry, setSelectedCountry] = useState<Country | undefined>(
     undefined
   );
+
+  const formCountryCode = useWatch({
+    control: form.control,
+    name: "address.countryCode",
+  });
+
+  useEffect(() => {
+    if (!formCountryCode) return;
+    if (selectedCountry?.alpha2 === formCountryCode) return;
+
+    const country = options.find(
+      (country) => country.alpha2 === formCountryCode
+    );
+
+    if (country) {
+      setSelectedCountry(country);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formCountryCode]);
 
   useEffect(() => {
     if (!selectedCountry && defaultValue) {
@@ -96,7 +118,7 @@ const CountryDropdownComponent = (
       open={open}
       onOpenChange={(open) => {
         setOpen(open);
-        props.onOpenChange?.(open);
+        props?.onOpenChange?.(open);
       }}
     >
       <PopoverTrigger

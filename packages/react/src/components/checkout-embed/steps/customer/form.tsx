@@ -10,11 +10,21 @@ import { type CustomerFormData, customerSchema } from "../../checkout-schema";
 interface CustomerFormProps {
   initialData?: CustomerFormData;
   onSubmit: (data: CustomerFormData) => void;
+  clientProxy?: string;
+  clientSecret: string;
+  latitude?: number;
+  longitude?: number;
+  currentAlpha2CountryCode?: string;
 }
 
 export default function CustomerForm({
   initialData,
   onSubmit,
+  clientProxy,
+  clientSecret,
+  latitude,
+  longitude,
+  currentAlpha2CountryCode,
 }: CustomerFormProps) {
   const { t } = useTranslation();
   const form = useForm<CustomerFormData>({
@@ -67,7 +77,14 @@ export default function CustomerForm({
           autoComplete="family-name"
         />
 
-        <AddressInput className="md:col-span-2" />
+        <AddressInput
+          className="md:col-span-2"
+          proxy={clientProxy}
+          clientSecret={clientSecret}
+          latitude={latitude}
+          longitude={longitude}
+          currentAlpha2CountryCode={currentAlpha2CountryCode}
+        />
 
         <InputGroup
           name="phone"

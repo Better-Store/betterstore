@@ -37,6 +37,10 @@ interface CheckoutFormProps {
   paymentSecret: string | null;
   publicKey: string | null;
   paymentComponentKey: number;
+  clientProxy?: string;
+  latitude?: number;
+  longitude?: number;
+  currentAlpha2CountryCode?: string;
 }
 
 export default function CheckoutForm({
@@ -56,6 +60,10 @@ export default function CheckoutForm({
   paymentSecret,
   publicKey,
   paymentComponentKey,
+  clientProxy,
+  latitude,
+  longitude,
+  currentAlpha2CountryCode,
 }: CheckoutFormProps) {
   const {
     formData,
@@ -317,6 +325,11 @@ export default function CheckoutForm({
       <CustomerForm
         initialData={formData.customer}
         onSubmit={handleCustomerSubmit}
+        clientProxy={clientProxy}
+        clientSecret={clientSecret}
+        latitude={latitude}
+        longitude={longitude}
+        currentAlpha2CountryCode={currentAlpha2CountryCode}
       />
     );
   };
