@@ -10,20 +10,7 @@ import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import CountryInput from "../country-input";
-
-const stateOptions = [
-  { value: "AL", label: "Alabama" },
-  { value: "AK", label: "Alaska" },
-  { value: "AZ", label: "Arizona" },
-  { value: "AR", label: "Arkansas" },
-  { value: "CA", label: "California" },
-  { value: "CO", label: "Colorado" },
-  { value: "CT", label: "Connecticut" },
-  { value: "DE", label: "Delaware" },
-  { value: "FL", label: "Florida" },
-  { value: "GA", label: "Georgia" },
-  { value: "Prague", label: "Prague" },
-];
+import { countriesWithProvinces, countryProvinces } from "./province-data";
 
 interface AddressInputProps {
   className?: string;
@@ -56,7 +43,15 @@ export function AddressInput({
 
   const addressInput = form.watch("address.line1") || "";
   const cityInput = form.watch("address.city") || "";
-  const line2Input = form.watch("address.line2") || "";
+  const countryCodeInput = form.watch("address.countryCode");
+
+  const renderProvinceInput: boolean =
+    countriesWithProvinces.includes(countryCodeInput) &&
+    countryProvinces[countryCodeInput as keyof typeof countryProvinces]
+      ?.length > 0;
+  const availableProvinces = renderProvinceInput
+    ? countryProvinces[countryCodeInput as keyof typeof countryProvinces]
+    : [];
 
   useEffect(() => {
     if (!currentAlpha2CountryCode) return;
@@ -116,10 +111,16 @@ export function AddressInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showAllInputs, addressInput]);
 
-  const handleSelectAddress = (result: AutosuggestAddressResult) => {
-    const { address } = result;
+  const handleSelectAddress = async (result: AutosuggestAddressResult) => {
+    setIsLoading(true);
+
+    const { address } = await storeClient.lookupAddress(clientSecret, {
+      id: result.id,
+      locale,
+    });
+
+    console.log(result);
     form.setValue("address.line1", address.line1);
-    form.setValue("address.line2", address.line2);
     form.setValue("address.city", address.city);
     form.setValue("address.province", address.province);
     form.setValue("address.provinceCode", address.provinceCode);
@@ -147,13 +148,6 @@ export function AddressInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cityInput]);
 
-  useEffect(() => {
-    if (!showApartmentField) {
-      setShowApartmentField(line2Input.length > 0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [line2Input]);
-
   return (
     <div className={cn("space-y-5", className)}>
       <CountryInput prefix="address" label="Country" form={form} />
@@ -167,7 +161,7 @@ export function AddressInput({
           icon={<Search className="h-4 w-4" />}
           showIcon={!showAllInputs}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 50)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
         />
 
         {/* Suggestions Dropdown */}
@@ -233,6 +227,7 @@ export function AddressInput({
             type="button"
             onClick={() => {
               setShowApartmentField(true);
+              form.setValue("address.line2", "");
               form.setFocus("address.line2");
             }}
             className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-2 text-sm transition-colors"
@@ -254,15 +249,34 @@ export function AddressInput({
         </div>
 
         {/* City, State, Postal Code Row - Always Present */}
-        <div className="grid grid-cols-3 gap-4">
+        <div
+          className={cn(
+            "grid gap-4",
+            renderProvinceInput ? "md:grid-cols-3" : "grid-cols-2"
+          )}
+        >
           <InputGroup name="address.city" label="City" required />
-          <SelectGroup
-            name="address.province"
-            label="State"
-            options={stateOptions}
-            required
-          />
-          <InputGroup name="address.zipCode" label="Postal Code" required />
+          {renderProvinceInput && (
+            <SelectGroup
+              name="address.provinceCode"
+              label="Province"
+              options={availableProvinces.map((state) => ({
+                value: state.code,
+                label: state.name,
+              }))}
+              onChange={(value) => {
+                const provinceName = availableProvinces.find(
+                  (state) => state.code === value
+                )?.name;
+
+                if (provinceName) {
+                  form.setValue("address.province", provinceName);
+                }
+              }}
+              required
+            />
+          )}
+          <InputGroup name="address.zipCode" label="Postal code" required />
         </div>
       </div>
     </div>

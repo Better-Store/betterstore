@@ -3,10 +3,19 @@ import { Address } from "../types";
 export type AutosuggestAddressResult = {
   id: string;
   title: string;
+  address: { label: string };
+  position: {
+    lat: number;
+    lng: number;
+  };
+};
+
+export type LookupAddressResult = {
+  id: string;
+  title: string;
   address: Pick<
     Address,
     | "line1"
-    | "line2"
     | "city"
     | "province"
     | "provinceCode"
@@ -14,8 +23,4 @@ export type AutosuggestAddressResult = {
     | "countryCode"
     | "zipCode"
   >;
-  position: {
-    lat: number;
-    lng: number;
-  };
 };

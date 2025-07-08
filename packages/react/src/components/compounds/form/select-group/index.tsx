@@ -23,6 +23,7 @@ type SelectGroupProps = {
   options: { value: string; label: string }[];
   required?: boolean;
   className?: string;
+  onChange?: (value: string) => void;
 };
 
 export default function SelectGroup({
@@ -31,6 +32,7 @@ export default function SelectGroup({
   options,
   required = false,
   className = "",
+  onChange,
 }: SelectGroupProps) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
@@ -51,7 +53,11 @@ export default function SelectGroup({
             </FloatingLabel>
 
             <Select
-              onValueChange={field.onChange}
+              onValueChange={(value) => {
+                field.onChange(value);
+                onChange?.(value);
+                setOpen(false);
+              }}
               open={open}
               onOpenChange={setOpen}
             >

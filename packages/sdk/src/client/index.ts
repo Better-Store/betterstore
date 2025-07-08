@@ -9,7 +9,7 @@ import {
   CustomerUpdateParams,
 } from "../customer/types";
 import { ApiError, createApiClient } from "../utils/axios";
-import { AutosuggestAddressResult } from "./types";
+import { AutosuggestAddressResult, LookupAddressResult } from "./types";
 
 class Client {
   public proxy?: string;
@@ -274,6 +274,21 @@ class Client {
   ): Promise<AutosuggestAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
     const { data } = await apiClient.get("/helpers/autosuggest-address", {
+      params,
+    });
+
+    return data;
+  }
+
+  async lookupAddress(
+    clientSecret: string,
+    params: {
+      id: string;
+      locale?: string;
+    }
+  ): Promise<LookupAddressResult> {
+    const apiClient = createApiClient(clientSecret, this.proxy);
+    const { data } = await apiClient.get("/helpers/lookup-address", {
       params,
     });
 
