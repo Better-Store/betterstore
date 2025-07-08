@@ -3,9 +3,13 @@ import { Address } from "../types";
 export type AutosuggestAddressResult = {
   id: string;
   title: string;
+  position: {
+    latitude: number;
+    longitude: number;
+  };
 };
 
-export type LookupAddressResult = AutosuggestAddressResult &
+export type GeocodeAddressResult = Omit<AutosuggestAddressResult, "position"> &
   Pick<
     Address,
     | "line1"

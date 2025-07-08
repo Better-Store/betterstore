@@ -9,7 +9,7 @@ import {
   CustomerUpdateParams,
 } from "../customer/types";
 import { ApiError, createApiClient } from "../utils/axios";
-import { AutosuggestAddressResult, LookupAddressResult } from "./types";
+import { AutosuggestAddressResult, GeocodeAddressResult } from "./types";
 
 class Client {
   public proxy?: string;
@@ -246,7 +246,9 @@ class Client {
     targetCurrency: string
   ): Promise<number> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data } = await apiClient.get(`/helpers/rates/${baseCurrency}`);
+    const data: { rates: Record<string, number> } = await apiClient.get(
+      `/helpers/rates/${baseCurrency}`
+    );
 
     const rate = data.rates[targetCurrency];
 
@@ -271,30 +273,36 @@ class Client {
     }
   ): Promise<AutosuggestAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data } = await apiClient.get("/helpers/autosuggest-address", {
-      params,
-    });
+    const { data, ...rest } = await apiClient.get(
+      "/helpers/autosuggest-address",
+      {
+        params,
+      }
+    );
+
+    console.log("autosuggest data", data);
+    console.log("autosuggest rest", rest);
 
     return data;
   }
 
   /**
-   * Get lookup address results
+   * Get geocode address results
    */
-  async getLookupAddressResults(
+  async getGeocodeAddressResults(
     clientSecret: string,
     params: {
-      query: string;
-      locale?: string;
-      latitude?: string;
-      longitude?: string;
-      countryCode?: string;
+      selectedStreetId: string;
+      position: AutosuggestAddressResult["position"];
     }
-  ): Promise<LookupAddressResult[]> {
+  ): Promise<GeocodeAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const { data } = await apiClient.get("/helpers/lookup-address", {
+    const { data, ...rest } = await apiClient.get("/helpers/geocode-address", {
       params,
     });
+
+    console.log("geocode data", data);
+    console.log("geocode rest", rest);
 
     return data;
   }
