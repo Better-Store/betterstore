@@ -3,6 +3,7 @@ import { Address } from "../types";
 export type AutosuggestAddressResult = {
   id: string;
   title: string;
+  countryCode: string;
   position: {
     lat: number;
     lng: number;

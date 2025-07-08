@@ -119,7 +119,6 @@ export function AddressInput({
   const handleSelectAddress = (
     address: AutosuggestAddressResult | GeocodeAddressResult
   ) => {
-    console.log(address);
     const isLookup = "line1" in address;
 
     if (!isLookup) {
@@ -128,6 +127,9 @@ export function AddressInput({
         .getGeocodeAddressResults(clientSecret, address)
         .then((results) => {
           console.log(results);
+          setIsLoading(false);
+          setShowSuggestions(false);
+          setSuggestions(results);
         });
       return;
     }
@@ -166,7 +168,7 @@ export function AddressInput({
           icon={<Search className="h-4 w-4" />}
           showIcon={!showAllInputs}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setShowSuggestions(false)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
         />
 
         {/* Suggestions Dropdown */}

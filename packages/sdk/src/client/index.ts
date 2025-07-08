@@ -289,6 +289,8 @@ class Client {
       id: string;
       title: string;
       position: AutosuggestAddressResult["position"];
+      countryCode: string;
+      locale?: string;
     }
   ): Promise<GeocodeAddressResult[]> {
     const apiClient = createApiClient(clientSecret, this.proxy);
