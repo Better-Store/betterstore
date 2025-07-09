@@ -3,6 +3,7 @@ import {
   StripeElementsOptions,
 } from "@stripe/stripe-js";
 import { useEffect } from "react";
+import { formatColor } from "./color-utils";
 
 export type Themes = "dark" | "light";
 export type Fonts = StripeElementsOptions["fonts"];
@@ -30,52 +31,6 @@ export type AppearanceConfig = {
     popover?: string;
     popoverForeground?: string;
   };
-};
-
-// Utility function to format colors (converts oklch to hex, keeps other formats as-is)
-const formatColor = (color: string | undefined): string => {
-  // If color is undefined, return a default
-  if (!color) {
-    return "#000000";
-  }
-  // If it's already a hex, rgb, or hsl color, return as is
-  if (
-    color.startsWith("#") ||
-    color.startsWith("rgb") ||
-    color.startsWith("hsl")
-  ) {
-    return color;
-  }
-
-  // If it's an oklch color, convert it
-  if (color.startsWith("oklch")) {
-    try {
-      // Create a temporary element to use CSS color conversion
-      const tempElement = document.createElement("div");
-      tempElement.style.color = color;
-      document.body.appendChild(tempElement);
-
-      // Get computed style to convert to rgb
-      const computedColor = window.getComputedStyle(tempElement).color;
-      document.body.removeChild(tempElement);
-
-      // Convert rgb to hex
-      const rgbMatch = computedColor.match(
-        /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/
-      );
-      if (rgbMatch) {
-        const r = parseInt(rgbMatch[1] ?? "0");
-        const g = parseInt(rgbMatch[2] ?? "0");
-        const b = parseInt(rgbMatch[3] ?? "0");
-        return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-      }
-    } catch (error) {
-      console.warn("Failed to convert oklch color to hex:", color, error);
-    }
-  }
-
-  // Fallback to a default color if conversion fails
-  return "#000000";
 };
 
 export default function Appearance({
@@ -248,17 +203,17 @@ export const convertCheckoutAppearanceToStripeAppearance = (
     rules: {
       ".Input": {
         padding: "12px",
-        border: `1px solid ${currentVariables["--border"]}`,
-        backgroundColor: currentVariables["--background"],
+        border: `1px solid ${formatColor(currentVariables["--border"])}`,
+        backgroundColor: formatColor(currentVariables["--background"]),
         fontSize: "14px",
         outline: "none",
       },
       ".Input:focus": {
-        backgroundColor: currentVariables["--secondary"],
+        backgroundColor: formatColor(currentVariables["--secondary"]),
       },
       ".Input::placeholder": {
         fontSize: "14px",
-        color: currentVariables["--muted-foreground"],
+        color: formatColor(currentVariables["--muted-foreground"]),
       },
       ".Label": {
         marginBottom: "8px",
@@ -276,16 +231,16 @@ export const convertCheckoutAppearanceToStripeAppearance = (
       // },
       ".Tab": {
         padding: "10px 12px 8px 12px",
-        border: `1px solid ${currentVariables["--border"]}`,
-        backgroundColor: currentVariables["--background"],
+        border: `1px solid ${formatColor(currentVariables["--border"])}`,
+        backgroundColor: formatColor(currentVariables["--background"]),
       },
       ".Tab:hover": {
-        backgroundColor: currentVariables["--secondary"],
+        backgroundColor: formatColor(currentVariables["--secondary"]),
       },
       ".Tab--selected, .Tab--selected:focus, .Tab--selected:hover": {
-        border: `1px solid ${currentVariables["--border"]}`,
-        backgroundColor: currentVariables["--secondary"],
-        color: currentVariables["--foreground"],
+        border: `1px solid ${formatColor(currentVariables["--border"])}`,
+        backgroundColor: formatColor(currentVariables["--secondary"]),
+        color: formatColor(currentVariables["--foreground"]),
       },
     },
     variables: {

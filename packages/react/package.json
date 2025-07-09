@@ -1,6 +1,6 @@
 {
   "name": "@betterstore/react",
-  "version": "0.5.17",
+  "version": "0.5.18",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,6 +23,7 @@
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@tailwindcss/postcss": "^4.1.11",
+    "@types/culori": "^4.0.0",
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
@@ -68,6 +69,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
+    "culori": "^4.0.2",
     "i18next": "^24.2.3",
     "i18next-browser-languagedetector": "^8.1.0",
     "i18next-http-backend": "^3.0.2",

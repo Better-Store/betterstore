@@ -169,6 +169,7 @@ export function AddressInput({
       {/* Address Search Field */}
       <div className="relative">
         <InputGroup
+          autoComplete="address-line1"
           name="address.line1"
           label={
             showAllInputs
@@ -281,6 +282,7 @@ export function AddressInput({
           )}
         >
           <InputGroup
+            autoComplete="address-line2"
             name="address.line2"
             label={t("CheckoutEmbed.CustomerForm.address.line2")}
           />
@@ -322,6 +324,7 @@ export function AddressInput({
             />
           )}
           <InputGroup
+            autoComplete="postal-code"
             name="address.zipCode"
             label={t("CheckoutEmbed.CustomerForm.address.zipCode")}
             required
