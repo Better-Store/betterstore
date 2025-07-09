@@ -322,6 +322,7 @@ function DiscountItem({
   label: string;
   canRemove: boolean;
 }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRemove = async () => {
@@ -344,7 +345,7 @@ function DiscountItem({
           className="hover:bg-muted hover:text-foreground relative z-10 -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-1"
         >
           <X className="size-3" />
-          <p className="sr-only">Remove</p>
+          <p className="sr-only">{t("CheckoutEmbed.Summary.remove")}</p>
         </div>
       )}
     </div>

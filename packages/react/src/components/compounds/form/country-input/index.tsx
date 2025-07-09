@@ -7,10 +7,7 @@ type InputGroupProps = {
   prefix?: string;
   label?: string;
   className?: string;
-} & Omit<
-  React.ComponentProps<typeof CompoboxGroupProps>,
-  "name" | "options" | "searchText" | "emptyText"
->;
+} & Omit<React.ComponentProps<typeof CompoboxGroupProps>, "name" | "options">;
 
 export default function CountryInput({
   form,
@@ -42,8 +39,6 @@ export default function CountryInput({
           form.setValue(countryInputName, countryName);
         }
       }}
-      searchText="Search countries..."
-      emptyText="No countries found."
       required
     />
   );

@@ -1,35 +1,31 @@
 {
   "CheckoutEmbed": {
     "CustomerForm": {
-      "address": {
-        "address": "Adresa",
-        "addressPlaceholder": "Zadejte Vaši adresu",
-        "button": "Uložit adresu",
-        "city": "Město",
-        "cityPlaceholder": "Zadejte město",
-        "country": "Země",
-        "countryPlaceholder": "Zadejte svou zemi",
-        "description": "Níže vyplňte údaje o Vaší adrese.",
-        "line1": "Ulice",
-        "line1Placeholder": "Zadejte ulici a číslo",
-        "line2": "Byt, apartmá, jednotka atd. (Volitelné)",
-        "line2Placeholder": "Byt 4B, Pokoj 123, atd.",
-        "state": "Stát (volitelné)",
-        "statePlaceholder": "Kalifornie",
-        "title": "Zadejte Vaši adresu",
-        "zipCode": "PSČ",
-        "zipCodePlaceholder": "12345"
-      },
       "button": "Uložit a pokračovat",
       "email": "Email",
-      "emailPlaceholder": "Zadejte svůj email",
       "firstName": "Křestní jméno",
-      "firstNamePlaceholder": "Zadejte své křestní jméno",
       "lastName": "Příjmení",
-      "lastNamePlaceholder": "Zadejte své příjmení",
       "phone": "Telefon",
-      "phonePlaceholder": "Zadejte své telefonní číslo",
-      "title": "Kontaktní údaje"
+      "title": "Kontaktní údaje",
+      "address": {
+        "addLine2": "Přidat společnost, k rukám, byt, apartmá, jednotka",
+        "city": "Obec/město",
+        "country": "Země",
+        "countryNoCountry": "Nebyly nalezeny žádné země.",
+        "countrySearch": "Hledat země ...",
+        "enterManually": "Zadejte adresu ručně",
+        "keepTyping": "Pokračuj v psaní adresy, aby se zobrazily výsledky",
+        "line1": "Adresa",
+        "line1-autocomplete": "Začni psát adresu",
+        "line2": "Společnost, C/O, Apt, Suite, Unit",
+        "loadingLookup": "Načítání adresy ...",
+        "loadingSuggestions": "Hledání adres ...",
+        "noResults": "Nebyly nalezeny žádné adresy",
+        "province": "Provincie",
+        "provinceNoProvinces": "Nebyly nalezeny žádné provincie.",
+        "provinceSearch": "Hledat provincie ...",
+        "zipCode": "PSČ"
+      }
     },
     "Summary": {
       "calculatedAtNextStep": "Vypočítáno v dalším kroku",
@@ -40,11 +36,11 @@
       "title": "Shrnutí",
       "total": "Celkem",
       "discountCodeApply": "Aplikovat",
-      "discountCodePlaceholder": "Slevový kód nebo dárková karta",
       "discountCodeError": "Už dostáváte nejlepší nabídku!",
       "free": "Zdarma",
       "discountCodeSuccess": "Slevový kód byl úspěšně použit.",
-      "discountCodeLabel": "Slevový kód"
+      "discountCodeLabel": "Slevový kód",
+      "remove": "Odstranit"
     },
     "loading": "Načítání ...",
     "Payment": {

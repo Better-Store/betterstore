@@ -8,6 +8,7 @@ import { AutosuggestAddressResult, createStoreClient } from "@betterstore/sdk";
 import { ArrowRight, Loader, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import CountryInput from "../country-input";
 import { getCountriesByLocale } from "./country-data";
 import { countriesWithProvinces, countryProvinces } from "./province-data";
@@ -31,6 +32,7 @@ export function AddressInput({
   currentAlpha3CountryCode,
   locale,
 }: AddressInputProps) {
+  const { t } = useTranslation();
   const storeClient = createStoreClient({ proxy });
   const form = useFormContext<CustomerFormData>();
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -158,7 +160,9 @@ export function AddressInput({
       <CountryInput
         form={form}
         prefix="address"
-        label="Country"
+        label={t("CheckoutEmbed.CustomerForm.address.country")}
+        emptyText={t("CheckoutEmbed.CustomerForm.address.countryNoCountry")}
+        searchText={t("CheckoutEmbed.CustomerForm.address.countrySearch")}
         locale={locale}
       />
 
@@ -166,7 +170,11 @@ export function AddressInput({
       <div className="relative">
         <InputGroup
           name="address.line1"
-          label={showAllInputs ? "Address" : "Start typing address"}
+          label={
+            showAllInputs
+              ? t("CheckoutEmbed.CustomerForm.address.line1")
+              : t("CheckoutEmbed.CustomerForm.address.line1-autocomplete")
+          }
           required={showAllInputs}
           icon={<Search className="h-4 w-4" />}
           showIcon={!showAllInputs}
@@ -184,14 +192,16 @@ export function AddressInput({
               {isLoading || isLoadingLookup ? (
                 <div className="text-muted-foreground border-border flex gap-2 border-b p-3 text-sm">
                   {isLoadingLookup
-                    ? "Loading address..."
-                    : "Searching for addresses..."}{" "}
+                    ? t("CheckoutEmbed.CustomerForm.address.loadingLookup")
+                    : t(
+                        "CheckoutEmbed.CustomerForm.address.loadingSuggestions"
+                      )}{" "}
                   <Loader className="size-4 animate-spin" />
                 </div>
               ) : suggestions.length > 0 ? (
                 <>
                   <div className="text-muted-foreground border-border border-b p-3 text-sm">
-                    Keep typing address to display results
+                    {t("CheckoutEmbed.CustomerForm.address.keepTyping")}
                   </div>
                   <div className="max-h-60 overflow-y-auto">
                     {suggestions.map((address, index) => (
@@ -212,18 +222,19 @@ export function AddressInput({
                       className="hover:bg-accent border-border flex w-full cursor-pointer items-center border-b px-3 py-3 text-left transition-colors last:border-b-0"
                     >
                       <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                        Input address manually <ArrowRight className="size-4" />
+                        {t("CheckoutEmbed.CustomerForm.address.enterManually")}{" "}
+                        <ArrowRight className="size-4" />
                       </div>
                     </button>
                   </div>
                 </>
               ) : addressInput.length > 2 ? (
                 <div className="text-muted-foreground border-border border-b p-3 text-sm">
-                  Type more to display results
+                  {t("CheckoutEmbed.CustomerForm.address.keepTyping")}
                 </div>
               ) : (
                 <div className="text-muted-foreground border-border border-b p-3 text-sm">
-                  No addresses found
+                  {t("CheckoutEmbed.CustomerForm.address.noResults")}
                 </div>
               )}
             </div>
@@ -237,7 +248,7 @@ export function AddressInput({
           onClick={handleManualEntry}
           className="text-foreground hover:text-muted-foreground cursor-pointer text-[13px] underline"
         >
-          Enter address manually
+          {t("CheckoutEmbed.CustomerForm.address.enterManually")}
         </button>
       </div>
 
@@ -260,7 +271,7 @@ export function AddressInput({
             className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-2 text-sm transition-colors"
           >
             <Plus className="h-4 w-4" />
-            Add Company, C/O, Apt, Suite, Unit
+            {t("CheckoutEmbed.CustomerForm.address.addLine2")}
           </button>
         </div>
 
@@ -271,7 +282,7 @@ export function AddressInput({
         >
           <InputGroup
             name="address.line2"
-            label="Company, C/O, Apt, Suite, Unit"
+            label={t("CheckoutEmbed.CustomerForm.address.line2")}
           />
         </div>
 
@@ -287,7 +298,7 @@ export function AddressInput({
             <CompoboxGroupProps
               form={form}
               name="address.provinceCode"
-              label="Province"
+              label={t("CheckoutEmbed.CustomerForm.address.province")}
               options={availableProvinces.map((state) => ({
                 value: state.code,
                 label: state.name,
@@ -301,12 +312,20 @@ export function AddressInput({
                   form.setValue("address.province", provinceName);
                 }
               }}
-              searchText="Search provinces..."
-              emptyText="No provinces found."
+              searchText={t(
+                "CheckoutEmbed.CustomerForm.address.provinceSearch"
+              )}
+              emptyText={t(
+                "CheckoutEmbed.CustomerForm.address.provinceNoProvinces"
+              )}
               required
             />
           )}
-          <InputGroup name="address.zipCode" label="Postal code" required />
+          <InputGroup
+            name="address.zipCode"
+            label={t("CheckoutEmbed.CustomerForm.address.zipCode")}
+            required
+          />
         </div>
       </div>
     </div>

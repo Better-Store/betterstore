@@ -1,6 +1,6 @@
 {
   "name": "@betterstore/react",
-  "version": "0.5.16",
+  "version": "0.5.17",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,6 +28,7 @@
     "@types/react-dom": "19.1.1",
     "@vitejs/plugin-react": "^4.5.0",
     "eslint": "^9.29.0",
+    "eslint-plugin-i18next": "^6.1.2",
     "postcss": "^8.5.3",
     "rollup": "^4.41.1",
     "rollup-plugin-dts": "^6.2.1",

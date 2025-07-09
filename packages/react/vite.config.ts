@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/betterstore": {
-        target: "https://api.betterstore.io/v1/client",
+        target: "https://v1.betterstore.io/client",
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/api\/betterstore/, ""),

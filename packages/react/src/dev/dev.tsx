@@ -10,7 +10,7 @@ const App = () => {
           "aa8294786a9f41097d7e38142e231358280456371415386c4fe5b66fc6f6cbc5",
         cancelUrl: "/cancel",
         successUrl: "/success",
-        locale: "cs",
+        locale: "en",
         clientProxy: "/api/betterstore",
       }}
     />

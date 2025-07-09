@@ -18,17 +18,13 @@
     ".gitignore": "ignore"
   },
   "[prisma]": { "editor.defaultFormatter": "Prisma.prisma" },
-  "turboConsoleLog.addSemicolonInTheEnd": true,
-  "turboConsoleLog.delimiterInsideMessage": "-",
-  "turboConsoleLog.insertEmptyLineAfterLogMessage": false,
-  "turboConsoleLog.insertEmptyLineBeforeLogMessage": false,
-  "turboConsoleLog.logMessagePrefix": "",
-  "turboConsoleLog.logMessageSuffix": ": ",
-  "turboConsoleLog.wrapLogMessage": false,
   "workbench.sideBar.location": "right",
-  "i18n-ally.localesPaths": ["messages"],
+  "i18n-ally.localesPaths": ["./packages/react/src/locales"],
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.namespace": true,
+  "i18n-ally.pathMatcher": "{locale}.json",
+  "i18n-ally.enabledFrameworks": ["react", "react-i18next"],
   "eslint.workingDirectories": [
     {
       "mode": "auto"

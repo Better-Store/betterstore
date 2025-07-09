@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const API_BASE_URL = "https://api.betterstore.io/v1";
+const API_BASE_URL = "https://v1.betterstore.io";
 
 // Define consistent error interface
 export interface ApiError {
