@@ -40,7 +40,7 @@ const FloatingLabel = React.forwardRef<
           className
         )}
       >
-        <div className="bg-background absolute left-0 right-0 top-1/2 z-0 h-px -translate-x-0 -translate-y-1/2" />
+        <div className="bg-background absolute left-0 right-0 top-1/2 z-0 h-[2px] -translate-x-0 -translate-y-1/2" />
         <LabelComponent
           ref={ref}
           className={cn(

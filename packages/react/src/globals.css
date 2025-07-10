@@ -42,6 +42,20 @@
     @apply bg-primary text-primary-foreground;
   }
 
+  /* Autofill styling - works across all browsers */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--muted) inset !important;
+    -webkit-text-fill-color: var(--foreground) !important;
+  }
+
+  input:-moz-autofill,
+  input:autofill {
+    @apply bg-muted text-foreground;
+  }
+
   * {
     @apply border-border outline-ring/50 border-solid;
   }

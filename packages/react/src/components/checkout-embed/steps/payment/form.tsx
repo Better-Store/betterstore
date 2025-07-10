@@ -111,21 +111,25 @@ export default function PaymentForm({
             setSubmitting={setIsSubmitting}
             publicKey={publicKey}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingTop: "2rem",
-              }}
-            >
-              <Button type="button" variant="ghost" onClick={onBack}>
-                <ChevronLeft />
-                {t("CheckoutEmbed.Payment.back")}
-              </Button>
-              <SubmitButton isValid={true} isSubmitting={isSubmitting}>
-                {t("CheckoutEmbed.Payment.button")}
-              </SubmitButton>
+            <div className="fixed bottom-0 left-0 right-0 z-50 mt-8 px-4 pb-4 sm:static sm:px-0 sm:pb-0">
+              <div className="bg-background flex flex-col-reverse items-center justify-between gap-2 sm:flex-row sm:bg-transparent">
+                <Button
+                  className="w-full sm:w-fit"
+                  type="button"
+                  variant="ghost"
+                  onClick={onBack}
+                >
+                  <ChevronLeft />
+                  {t("CheckoutEmbed.Payment.back")}
+                </Button>
+                <SubmitButton
+                  className="w-full max-sm:h-[52px] sm:w-fit"
+                  isValid={true}
+                  isSubmitting={isSubmitting}
+                >
+                  {t("CheckoutEmbed.Payment.button")}
+                </SubmitButton>
+              </div>
             </div>
           </PaymentElement>
         )}

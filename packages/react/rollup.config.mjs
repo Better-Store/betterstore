@@ -20,6 +20,17 @@ const removeUseClientDirective = {
   },
 };
 
+// Custom plugin to remove ?inline query parameter from CSS imports
+const removeInlineQuery = {
+  name: "remove-inline-query",
+  transform(code) {
+    return {
+      code: code.replace(/from\s+["']([^"']*\.css)\?inline["']/g, 'from "$1"'),
+      map: null,
+    };
+  },
+};
+
 export default {
   input: "src/index.ts",
   output: [
@@ -42,6 +53,7 @@ export default {
       ],
     }),
     removeUseClientDirective,
+    removeInlineQuery,
     resolve({
       extensions: [".js", ".jsx", ".ts", ".tsx", ".json", ".css"],
       browser: true,
