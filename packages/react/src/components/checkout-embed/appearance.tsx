@@ -193,6 +193,13 @@ const getColorVariablesFromAppearanceConfig = (
   return colors;
 };
 
+const getFontSize = () => {
+  if (typeof window !== "undefined" && window.innerWidth < 768) {
+    return "16px"; // Mobile — prevent zoom
+  }
+  return "14px"; // Desktop
+};
+
 export const convertCheckoutAppearanceToStripeAppearance = (
   appearance?: AppearanceConfig,
   fonts?: Fonts
@@ -205,14 +212,14 @@ export const convertCheckoutAppearanceToStripeAppearance = (
         padding: "12px",
         border: `1px solid ${formatColor(currentVariables["--border"])}`,
         backgroundColor: formatColor(currentVariables["--background"]),
-        fontSize: "14px",
+        fontSize: getFontSize(),
         outline: "none",
       },
       ".Input:focus": {
         backgroundColor: formatColor(currentVariables["--secondary"]),
       },
       ".Input::placeholder": {
-        fontSize: "14px",
+        fontSize: getFontSize(),
         color: formatColor(currentVariables["--muted-foreground"]),
       },
       ".Label": {

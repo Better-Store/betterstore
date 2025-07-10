@@ -3,8 +3,8 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import React, { memo, useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { memo, useState } from "react";
+import "./betterstore-checkout-embed-payment-element";
 import { useCheckout } from "./useCheckout";
 
 const CheckoutForm = ({
@@ -24,24 +24,6 @@ const CheckoutForm = ({
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [rect, setRect] = useState<DOMRect | null>(null);
-
-  useEffect(() => {
-    const updateRect = () => {
-      if (containerRef.current) {
-        setRect(containerRef.current.getBoundingClientRect());
-      }
-    };
-
-    updateRect();
-
-    window.addEventListener("resize", updateRect);
-
-    return () => {
-      window.removeEventListener("resize", updateRect);
-    };
-  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -72,33 +54,17 @@ const CheckoutForm = ({
   };
 
   return (
-    <>
-      <div>
-        <div ref={containerRef} className="h-[310px] w-full sm:h-[230px]" />
-        {errorMessage && (
-          <p className="text-destructive -mb-2 mt-2 text-sm">{errorMessage}</p>
-        )}
-        <form className="w-full" onSubmit={handleSubmit}>
-          {children}
-        </form>
-      </div>
-      {ReactDOM.createPortal(
-        <div
-          style={{
-            display: "block",
-            zIndex: 20,
-            position: "absolute",
-            top: rect?.top,
-            left: rect?.left,
-            width: rect?.width,
-            height: rect?.height,
-          }}
-        >
-          <PaymentElement />
-        </div>,
-        document.body
+    <form className="w-full pb-40 sm:pb-0" onSubmit={handleSubmit}>
+      {/* @ts-expect-error - Custom element */}
+      <betterstore-checkout-embed-payment-element>
+        <PaymentElement />
+        {/* @ts-expect-error - Custom element */}
+      </betterstore-checkout-embed-payment-element>
+      {errorMessage && (
+        <p className="text-destructive -mb-2 mt-2 text-sm">{errorMessage}</p>
       )}
-    </>
+      {children}
+    </form>
   );
 };
 

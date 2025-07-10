@@ -111,8 +111,8 @@ export default function PaymentForm({
             setSubmitting={setIsSubmitting}
             publicKey={publicKey}
           >
-            <div className="fixed bottom-0 left-0 right-0 z-50 mt-8 px-4 pb-4 sm:static sm:px-0 sm:pb-0">
-              <div className="bg-background flex flex-col-reverse items-center justify-between gap-2 sm:flex-row sm:bg-transparent">
+            <div className="fixed bottom-0 left-0 right-0 z-50 mt-8 px-4 sm:static sm:px-0">
+              <div className="bg-background flex flex-col-reverse items-center justify-between gap-2 pb-4 sm:flex-row sm:bg-transparent sm:pb-0">
                 <Button
                   className="w-full sm:w-fit"
                   type="button"
