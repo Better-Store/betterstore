@@ -53,7 +53,7 @@ const FloatingLabel = React.forwardRef<
               : "text-muted-foreground text-sm",
             {
               "text-xs font-medium": isFloating,
-              "text-input": isFloating && !isFocused,
+              "text-muted-foreground": isFloating && !isFocused,
               "text-ring": isFloating && isFocused,
               "text-muted-foreground text-sm": !isFloating,
             },

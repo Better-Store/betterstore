@@ -79,13 +79,7 @@ export interface CheckoutCreateParams {
 export interface CheckoutUpdateParams {
   customerId?: string;
 
-  shipmentData?: {
-    provider: string;
-    name?: string;
-    pickupPointId?: string;
-    trackingNumber?: string;
-    trackingUrl?: string;
-  };
+  shipments: CheckoutShipment[];
 }
 
 export type { ShippingRate } from "./shipping.types";
@@ -97,6 +91,11 @@ type ShipmentData = {
   pickupPointId?: string;
   trackingId?: string;
   trackingUrl?: string;
+};
+
+type CheckoutShipment = {
+  id: string;
+  shipmentData?: ShipmentData | null;
 };
 
 export interface CheckoutSession {
@@ -122,7 +121,7 @@ export interface CheckoutSession {
   }[];
   currency: string;
   exchangeRate: number | null;
-  shipmentData: ShipmentData | null;
+  shipments: CheckoutShipment[];
 
   status:
     | "IN_PROGRESS"
