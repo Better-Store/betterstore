@@ -212,6 +212,7 @@ export default function CheckoutForm({
 
       await storeClient.updateCheckout(clientSecret, checkoutId, {
         customerId: newCustomer.id,
+        shipments: [],
       });
       newCustomerId = newCustomer.id;
     } else {
@@ -243,7 +244,10 @@ export default function CheckoutForm({
   };
 
   // Handle shipping method form submission
-  const handleShippingSubmit = async (data: ShippingMethodFormData) => {
+  const handleShippingSubmit = async (
+    data: ShippingMethodFormData,
+    id: string
+  ) => {
     const newFormData = {
       ...formData,
       shipping: data,
@@ -252,11 +256,16 @@ export default function CheckoutForm({
     setFormData(newFormData);
 
     await storeClient.updateCheckout(clientSecret, checkoutId, {
-      shipmentData: {
-        provider: data.provider,
-        pickupPointId: data.pickupPointId,
-        name: data.name,
-      },
+      shipments: [
+        {
+          id: id,
+          shipmentData: {
+            provider: data.provider,
+            pickupPointId: data.pickupPointId,
+            name: data.name,
+          },
+        },
+      ],
     });
 
     setShippingCost(data.price);

@@ -19,7 +19,7 @@ import ShippingOptionWrapper from "./shipping-option-wrapper";
 interface ShippingMethodFormProps {
   shippingRates: ShippingRate[];
   initialData?: ShippingMethodFormData;
-  onSubmit: (data: ShippingMethodFormData) => void;
+  onSubmit: (data: ShippingMethodFormData, id: string) => void;
   onBack: () => void;
   contactEmail: string;
   shippingAddress: string;
@@ -91,7 +91,10 @@ export default function ShippingMethodForm({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit((data) => onSubmit(data, "123"))} // TODO: change the id
+          className="space-y-4"
+        >
           {shippingRates.length === 0 &&
             Array.from({ length: 3 }).map((_, index) => (
               <ShippingRateLoading key={index} />
