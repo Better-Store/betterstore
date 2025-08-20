@@ -5,7 +5,6 @@ import clsx from "clsx";
 import { ChevronDown, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useFormStore } from "../../useFormStore";
 import DiscountCode from "./discount-code";
 
 export default function CheckoutSummary({
@@ -29,7 +28,6 @@ export default function CheckoutSummary({
   applyDiscountCode: (code: string) => Promise<void>;
   removeDiscount: (id: string) => Promise<void>;
 }) {
-  const { formData } = useFormStore();
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
   const subtotal = lineItems.reduce((acc, item) => {
@@ -38,7 +36,7 @@ export default function CheckoutSummary({
     return acc + (productItem?.priceInCents ?? 0) * item.quantity;
   }, 0);
 
-  const shippingPrice = shipping ?? formData.shipping?.price ?? 0;
+  const shippingPrice = shipping ?? 0;
   const total = subtotal + (tax ?? 0) + shippingPrice;
   const isShippingFree =
     subtotal > shippingPrice &&
