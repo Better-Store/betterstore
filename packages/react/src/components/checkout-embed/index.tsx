@@ -68,6 +68,26 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
     string | undefined
   >(undefined);
 
+  const [totalShipping, setTotalShipping] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (checkout) {
+      const areAllShipmentsFilled = checkout.shipments.every(
+        (shipment) => shipment.shipmentData?.provider
+      );
+
+      if (areAllShipmentsFilled) {
+        setTotalShipping(
+          checkout.shipments.reduce((acc, shipment) => {
+            return acc + (shipment.shipmentData?.priceInCents ?? 0);
+          }, 0)
+        );
+      } else {
+        setTotalShipping(null);
+      }
+    }
+  }, [checkout]);
+
   useEffect(() => {
     getIpInfo().then(({ latitude, longitude, countryCodeIso3 }) => {
       setLatitude(latitude);
@@ -128,11 +148,6 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
   if (!checkout && !loading) {
     throw new Error("Checkout not found");
   }
-
-  const setShippingCost = (cost: number) => {
-    if (!checkout) return;
-    setCheckout({ ...checkout, shipping: cost });
-  };
 
   async function generatePaymentSecret() {
     console.log("[Payment Debug] Generating new payment secret");
@@ -271,7 +286,7 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
       return acc + (productItem?.priceInCents ?? 0) * item.quantity;
     }, 0);
 
-    const shippingPrice = checkout.shipping ?? 0;
+    const shippingPrice = totalShipping ?? 0;
     const total = subtotal + (checkout.tax ?? 0) + shippingPrice;
 
     const isShippingFree =
@@ -335,7 +350,7 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
           ) : (
             <CheckoutForm
               locale={locale}
-              setShippingCost={setShippingCost}
+              setShippingCost={setTotalShipping}
               storeClient={storeClient}
               fonts={config.fonts}
               checkoutAppearance={appearance}
@@ -354,6 +369,7 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
               latitude={latitude}
               longitude={longitude}
               currentAlpha3CountryCode={currentAlpha3CountryCode}
+              shipments={checkout?.shipments || []}
             />
           )}
         </div>
@@ -365,7 +381,7 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
             <CheckoutSummary
               currency={checkout?.currency ?? ""}
               lineItems={checkout?.lineItems ?? []}
-              shipping={checkout?.shipping}
+              shipping={totalShipping}
               tax={checkout?.tax}
               onCancel={onCancel}
               exchangeRate={checkout?.exchangeRate ?? 1}

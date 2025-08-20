@@ -124,9 +124,12 @@ class Checkout {
   /**
    * Get shipping rates for a checkout session
    */
-  async getShippingRates(checkoutId: string): Promise<ShippingRate[]> {
+  async getShippingRates(
+    checkoutId: string,
+    shipmentId: string
+  ): Promise<ShippingRate[]> {
     const data: ShippingRate[] | ApiError = await this.apiClient.get(
-      `/checkout/shipping/${checkoutId}`
+      `/checkout/${checkoutId}/shipping/${shipmentId}/rates`
     );
 
     if (("isError" in data && data.isError) || !data || !Array.isArray(data)) {

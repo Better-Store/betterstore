@@ -78,8 +78,7 @@ export interface CheckoutCreateParams {
 
 export interface CheckoutUpdateParams {
   customerId?: string;
-
-  shipments: CheckoutShipment[];
+  shipments?: CheckoutShipment[];
 }
 
 export type { ShippingRate } from "./shipping.types";
@@ -91,6 +90,7 @@ type ShipmentData = {
   pickupPointId?: string;
   trackingId?: string;
   trackingUrl?: string;
+  priceInCents: number;
 };
 
 type CheckoutShipment = {
@@ -111,7 +111,6 @@ export interface CheckoutSession {
   lineItems: LineItem[];
 
   tax: number | null;
-  shipping: number | null;
   discountAmount: number | null;
   appliedDiscounts: {
     id: string;

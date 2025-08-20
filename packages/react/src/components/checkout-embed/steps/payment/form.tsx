@@ -10,6 +10,7 @@ import {
   convertCheckoutAppearanceToStripeAppearance,
   Fonts,
 } from "../../appearance";
+import { FormStore } from "../../useFormStore";
 
 interface PaymentFormProps {
   paymentSecret: string | null;
@@ -18,9 +19,8 @@ interface PaymentFormProps {
   onBack: () => void;
   onDoubleBack: () => void;
   contactEmail: string;
-  shippingAddress: string;
-  shippingName: string;
-  shippingPrice: string;
+  shippingFormData: NonNullable<FormStore["formData"]["shipping"]>;
+  address: string;
   checkoutAppearance?: AppearanceConfig;
   fonts?: Fonts;
   locale?: StripeElementLocale;
@@ -35,9 +35,8 @@ export default function PaymentForm({
   onBack,
   onDoubleBack,
   contactEmail,
-  shippingAddress,
-  shippingName,
-  shippingPrice,
+  shippingFormData,
+  address,
   checkoutAppearance,
   fonts,
   locale,
@@ -73,7 +72,7 @@ export default function PaymentForm({
             <span className="font-medium">
               {t("CheckoutEmbed.Shipping.address")}
             </span>{" "}
-            <span className="text-muted-foreground">{shippingAddress}</span>
+            <span className="text-muted-foreground">{address}</span>
           </p>
           <Button variant="link" size="link" onClick={onDoubleBack}>
             {t("CheckoutEmbed.Shipping.change")}
@@ -81,14 +80,20 @@ export default function PaymentForm({
         </div>
 
         <div className="flex items-center justify-between text-sm">
-          <p>
-            <span className="font-medium">
+          <div className="flex gap-1">
+            <p className="font-medium">
               {t("CheckoutEmbed.Shipping.shipping")}
-            </span>{" "}
-            <span className="text-muted-foreground">
-              {shippingName} · {shippingPrice}
-            </span>
-          </p>
+            </p>{" "}
+            <div className="text-muted-foreground flex flex-col gap-1">
+              {Object.entries(shippingFormData).map(
+                ([id, shipmentFormData]) => (
+                  <p key={id}>
+                    {shipmentFormData.name} · {shipmentFormData.priceInCents}
+                  </p>
+                )
+              )}
+            </div>
+          </div>
           <Button variant="link" size="link" onClick={onBack}>
             {t("CheckoutEmbed.Shipping.change")}
           </Button>

@@ -1,4 +1,3 @@
-import { storeHelpers } from "@/react/lib/betterstore";
 import {
   CheckoutSession,
   createStoreClient,
@@ -9,10 +8,10 @@ import { useCallback, useEffect, useState } from "react";
 import { AppearanceConfig, Fonts } from "./appearance";
 import {
   customerSchema,
-  shippingMethodSchema,
+  shipmentsFormSchema,
   type CheckoutFormData,
   type CustomerFormData,
-  type ShippingMethodFormData,
+  type ShipmentsFormData,
 } from "./checkout-schema";
 import { formatAddress } from "./steps/customer/address-utils";
 import CustomerForm from "./steps/customer/form";
@@ -41,6 +40,7 @@ interface CheckoutFormProps {
   latitude?: number;
   longitude?: number;
   currentAlpha3CountryCode?: string;
+  shipments: CheckoutSession["shipments"];
 }
 
 export default function CheckoutForm({
@@ -64,6 +64,7 @@ export default function CheckoutForm({
   latitude,
   longitude,
   currentAlpha3CountryCode,
+  shipments,
 }: CheckoutFormProps) {
   const {
     formData,
@@ -80,7 +81,7 @@ export default function CheckoutForm({
 
     const isShippingValid =
       formData.shipping &&
-      shippingMethodSchema.safeParse(formData.shipping).success;
+      shipmentsFormSchema.safeParse(formData.shipping).success;
     const isCustomerValid =
       formData.customer && customerSchema.safeParse(formData.customer).success;
 
@@ -212,7 +213,6 @@ export default function CheckoutForm({
 
       await storeClient.updateCheckout(clientSecret, checkoutId, {
         customerId: newCustomer.id,
-        shipments: [],
       });
       newCustomerId = newCustomer.id;
     } else {
@@ -244,10 +244,7 @@ export default function CheckoutForm({
   };
 
   // Handle shipping method form submission
-  const handleShippingSubmit = async (
-    data: ShippingMethodFormData,
-    id: string
-  ) => {
+  const handleShippingSubmit = async (data: ShipmentsFormData) => {
     const newFormData = {
       ...formData,
       shipping: data,
@@ -255,20 +252,26 @@ export default function CheckoutForm({
 
     setFormData(newFormData);
 
+    const shipments = Object.entries(data).map(([id, shipmentFormData]) => ({
+      id: id,
+      shipmentData: {
+        provider: shipmentFormData.provider,
+        pickupPointId: shipmentFormData.pickupPointId,
+        name: shipmentFormData.name,
+        priceInCents: shipmentFormData.priceInCents,
+      },
+    }));
+
     await storeClient.updateCheckout(clientSecret, checkoutId, {
-      shipments: [
-        {
-          id: id,
-          shipmentData: {
-            provider: data.provider,
-            pickupPointId: data.pickupPointId,
-            name: data.name,
-          },
-        },
-      ],
+      shipments,
     });
 
-    setShippingCost(data.price);
+    setShippingCost(
+      shipments.reduce(
+        (acc, shipment) => acc + shipment.shipmentData.priceInCents,
+        0
+      )
+    );
     setStep("payment");
   };
 
@@ -299,13 +302,8 @@ export default function CheckoutForm({
           onBack={handleBack}
           onDoubleBack={handleDoubleBack}
           contactEmail={formData.customer.email}
-          shippingAddress={formatAddress(formData.customer.address)}
-          shippingName={formData.shipping.name}
-          shippingPrice={storeHelpers.formatPrice(
-            formData.shipping.price,
-            currency,
-            exchangeRate
-          )}
+          address={formatAddress(formData.customer.address)}
+          shippingFormData={formData.shipping}
           publicKey={publicKey}
         />
       );
@@ -326,6 +324,7 @@ export default function CheckoutForm({
           exchangeRate={exchangeRate}
           locale={locale}
           countryCode={formData.customer.address.countryCode}
+          shipments={shipments}
         />
       );
     }

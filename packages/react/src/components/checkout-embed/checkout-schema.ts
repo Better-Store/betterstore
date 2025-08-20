@@ -24,22 +24,29 @@ export const customerSchema = z.object({
 });
 
 // Shipping method schema
-export const shippingMethodSchema = z.object({
+const shippingMethodSchema = z.object({
   rateId: z.string().min(1, "required_error"),
   provider: z.string().min(1, "required_error"),
-  price: z.number().min(1, "required_error"),
+  priceInCents: z.number().min(1, "required_error"),
   name: z.string().min(1, "required_error"),
   pickupPointId: z.string().optional(),
   pickupPointDisplayName: z.string().optional(),
 });
 
+export const shipmentsFormSchema = z
+  .record(z.string(), shippingMethodSchema)
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "at_least_one_shipping_method_required",
+    path: [],
+  });
+
 // Combined checkout schema
 export const checkoutSchema = z.object({
   customer: customerSchema,
-  shipping: shippingMethodSchema,
+  shipping: shipmentsFormSchema,
   customerId: z.string().optional(),
 });
 
 export type CheckoutFormData = z.infer<typeof checkoutSchema>;
 export type CustomerFormData = z.infer<typeof customerSchema>;
-export type ShippingMethodFormData = z.infer<typeof shippingMethodSchema>;
+export type ShipmentsFormData = z.infer<typeof shipmentsFormSchema>;
