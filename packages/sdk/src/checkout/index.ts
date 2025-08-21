@@ -1,9 +1,9 @@
 import { ApiError, createApiClient } from "../utils/axios";
+import { GetShippingRatesResponse } from "./shipping.types";
 import {
   CheckoutCreateParams,
   CheckoutSession,
   CheckoutUpdateParams,
-  ShippingRate,
 } from "./types";
 
 class Checkout {
@@ -125,18 +125,17 @@ class Checkout {
    * Get shipping rates for a checkout session
    */
   async getShippingRates(
-    checkoutId: string,
-    shipmentId: string
-  ): Promise<ShippingRate[]> {
-    const data: ShippingRate[] | ApiError = await this.apiClient.get(
-      `/checkout/${checkoutId}/shipping/${shipmentId}/rates`
+    checkoutId: string
+  ): Promise<GetShippingRatesResponse> {
+    const data: GetShippingRatesResponse | ApiError = await this.apiClient.get(
+      `/checkout/${checkoutId}/shipping/rates`
     );
 
-    if (("isError" in data && data.isError) || !data || !Array.isArray(data)) {
-      return [];
+    if (("isError" in data && data.isError) || !data) {
+      return {};
     }
 
-    return data;
+    return data as GetShippingRatesResponse;
   }
 
   /**

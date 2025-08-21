@@ -10,3 +10,7 @@ export interface ZasilkovnaRate extends BaseRate {
   provider: "zasilkovna";
   clientSecret: string;
 }
+
+export interface GetShippingRatesResponse {
+  [shipmentId: string]: ShippingRate[];
+}

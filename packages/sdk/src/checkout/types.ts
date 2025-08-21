@@ -81,7 +81,7 @@ export interface CheckoutUpdateParams {
   shipments?: CheckoutShipment[];
 }
 
-export type { ShippingRate } from "./shipping.types";
+export type { GetShippingRatesResponse, ShippingRate } from "./shipping.types";
 
 type ShipmentData = {
   provider: string;
