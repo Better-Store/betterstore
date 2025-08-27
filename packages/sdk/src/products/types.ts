@@ -15,12 +15,12 @@ export interface ProductVariant {
   description?: string;
   images: string[];
 
-  trackInventory: boolean;
   sku?: string;
   barcode?: string;
-  stockAvailable: number;
-  stockCommited: number;
-  stockUnavailable: number;
+  inventoryItem: {
+    stockPolicy: "CONTINUE" | "DENY";
+    trackInventory: boolean;
+  };
 
   isPhysical: boolean;
   weightInGrams?: number;
@@ -70,12 +70,12 @@ export interface Product {
   billingInterval: ProductBillingInterval;
   billingIntervalCount: number;
 
-  trackInventory: boolean;
   sku?: string;
   barcode?: string;
-  stockAvailable: number;
-  stockCommited: number;
-  stockUnavailable: number;
+  inventoryItem: {
+    stockPolicy: "CONTINUE" | "DENY";
+    trackInventory: boolean;
+  };
 
   seoPageTitle?: string;
   seoDescription?: string;
@@ -112,8 +112,6 @@ export type ListProductsSortBy =
   | "createdAt"
   | "updatedAt"
   | "title"
-  | "stockAvailable"
-  | "stockCommited"
   | "priceInCents";
 
 export type ListProductsParams = GetListParams<
