@@ -255,10 +255,10 @@ export default function CheckoutForm({
     const shipments = Object.entries(data).map(([id, shipmentFormData]) => ({
       id: id,
       shipmentData: {
-        provider: shipmentFormData.provider,
-        pickupPointId: shipmentFormData.pickupPointId,
-        name: shipmentFormData.name,
+        rateId: shipmentFormData.rateId,
+        providerId: shipmentFormData.providerId,
         priceInCents: shipmentFormData.priceInCents,
+        pickupPointId: shipmentFormData.pickupPointId,
       },
     }));
 

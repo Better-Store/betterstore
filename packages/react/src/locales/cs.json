@@ -64,6 +64,9 @@
         "other": "Váš balíček bude doručen kurýrem.",
         "zasilkovna": "Vaše objednávka bude doručena na výdejní místo.",
         "shippedTo": "Místo doručení:"
+      },
+      "shipment": {
+        "title": "Zásilka č."
       }
     }
   },

@@ -55,9 +55,21 @@
       "day": "day",
       "days": "days",
       "description": {
-        "other": "Your package will be delivered by a courier.",
-        "zasilkovna": "Your package will be delivered to a pickup point.",
         "shippedTo": "Shipped to:"
+      },
+      "Shipment": {
+        "title": "Shipment No. ",
+        "perIdTitles": {
+          "zasilkovna-z_box": "Zásilkovna, Z-Box",
+          "prebuilt-pickup-in-store": "Pickup in store",
+          "prebuilt-local-delivery": "Local delivery"
+        },
+        "perIdDescriptions": {
+          "fallback": "Your package will be delivered by a courier.",
+          "zasilkovna-z_box": "Your package will be delivered to a pickup point.",
+          "prebuilt-pickup-in-store": "Pickup in store",
+          "prebuilt-local-delivery": "Local delivery"
+        }
       }
     },
     "Payment": {

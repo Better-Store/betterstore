@@ -85,13 +85,13 @@ export type { GetShippingRatesResponse, ShippingRate } from "./shipping.types";
 
 type ShipmentData = {
   rateId: string;
-  providerId: string;
+  providerId?: string;
 
   priceInCents: number;
-  pickupPointId: string;
+  pickupPointId?: string;
 
-  trackingId: string;
-  trackingUrl: string;
+  trackingId?: string;
+  trackingUrl?: string;
 };
 
 type CheckoutShipment = {

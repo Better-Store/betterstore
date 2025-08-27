@@ -88,7 +88,8 @@ export default function PaymentForm({
               {Object.entries(shippingFormData).map(
                 ([id, shipmentFormData]) => (
                   <p key={id}>
-                    {shipmentFormData.name} · {shipmentFormData.priceInCents}
+                    {shipmentFormData.displayName} ·{" "}
+                    {shipmentFormData.priceInCents}
                   </p>
                 )
               )}

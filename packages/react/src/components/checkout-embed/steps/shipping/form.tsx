@@ -103,7 +103,7 @@ export default function ShipmentsForm({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {shipments.map((shipment) => (
+          {shipments.map((shipment, index) => (
             <SingleShipmentSection
               key={shipment.id}
               shipment={shipment}
@@ -116,6 +116,7 @@ export default function ShipmentsForm({
               locale={locale}
               countryCode={countryCode}
               multipleShipments={shipments.length > 1}
+              index={index}
             />
           ))}
           <FormMessage>{form.formState.errors.root?.message}</FormMessage>
@@ -149,6 +150,7 @@ const SingleShipmentSection = ({
   formData,
   multipleShipments,
   shipment,
+  index,
 }: {
   shippingRates: ShippingRate[];
   form: UseFormReturn<ShipmentsFormData>;
@@ -160,6 +162,7 @@ const SingleShipmentSection = ({
   countryCode?: string;
   multipleShipments: boolean;
   shipment: CheckoutSession["shipments"][number];
+  index: number;
 }) => {
   const { t } = useTranslation();
   const shipmentId = shipment.id;
@@ -171,9 +174,8 @@ const SingleShipmentSection = ({
     <div>
       {multipleShipments && (
         <h3 className="text-lg font-medium">
-          {/* {t("CheckoutEmbed.Shipping.shipment.title")} */}
-          {/* TODO: construct the headline */}
-          {shipment.shipmentData?.name}
+          {t("CheckoutEmbed.Shipping.Shipment.title")}
+          {index + 1}
         </h3>
       )}
       {shippingRates.length === 0 &&
@@ -184,7 +186,6 @@ const SingleShipmentSection = ({
         const pickupPointDisplayName = form.watch(
           `${shipmentId}.pickupPointDisplayName`
         );
-        const rateId = rate.provider + rate.name;
         const intPrice = Math.ceil(Number(rate.priceInCents));
         const displayPrice = storeHelpers.formatPrice(
           intPrice,
@@ -192,33 +193,47 @@ const SingleShipmentSection = ({
           exchangeRate
         );
 
+        const isFixedRate = rate.type === "FIXED";
+        const isAutoRate =
+          rate.type === "CUSTOM_SHIPPING_VENDOR" ||
+          rate.type === "PLATFORM_CARRIER";
+        const isZasilkovna = isAutoRate && rate.providerId === "zasilkovna";
+
+        const name = isFixedRate
+          ? rate.name
+          : (t(`CheckoutEmbed.Shipping.Shipment.perIdTitles.${rate.id}`) ??
+            rate.id);
+
+        const fallbackDescription = t(
+          `CheckoutEmbed.Shipping.Shipment.perIdDescriptions.fallback`
+        );
         const description =
-          rate.provider === "zasilkovna"
-            ? t("CheckoutEmbed.Shipping.description.zasilkovna")
-            : t("CheckoutEmbed.Shipping.description.other");
+          (isFixedRate
+            ? rate.description
+            : t(
+                `CheckoutEmbed.Shipping.Shipment.perIdDescriptions.${rate.id}`
+              )) ?? fallbackDescription;
 
         return (
           <ShippingOptionWrapper
             rate={rate}
-            key={rateId}
+            key={rate.id}
             onPickupPointSelected={(
               pickupPointId: string,
               pickupPointName: string
             ) => {
               const newData = {
-                rateId,
-                provider: rate.provider,
+                rateId: rate.id,
+                providerId: isAutoRate ? rate.providerId : undefined,
                 priceInCents: intPrice,
-                name: rate.name,
-                pickupPointId:
-                  rate.provider === "zasilkovna" ? pickupPointId : "",
-                pickupPointDisplayName:
-                  rate.provider === "zasilkovna" ? pickupPointName : "",
+                displayName: name,
+                pickupPointId: isZasilkovna ? pickupPointId : "",
+                pickupPointDisplayName: isZasilkovna ? pickupPointName : "",
               };
 
               form.setValue(`${shipmentId}.rateId`, newData.rateId);
-              form.setValue(`${shipmentId}.provider`, newData.provider);
-              form.setValue(`${shipmentId}.name`, newData.name);
+              form.setValue(`${shipmentId}.providerId`, newData.providerId);
+              form.setValue(`${shipmentId}.displayName`, newData.displayName);
               form.setValue(`${shipmentId}.priceInCents`, newData.priceInCents);
               form.setValue(
                 `${shipmentId}.pickupPointId`,
@@ -241,12 +256,12 @@ const SingleShipmentSection = ({
               className={clsx(
                 "bg-background cursor-pointer rounded-md border p-4",
                 {
-                  "bg-muted border-primary": currentRateId === rateId,
+                  "bg-muted border-primary": currentRateId === rate.id,
                 }
               )}
             >
               <div className="flex w-full items-center justify-between">
-                <p>{rate.name}</p>
+                <p>{name}</p>
                 <p>{displayPrice}</p>
               </div>
               <p className="text-muted-foreground text-sm">{description}</p>

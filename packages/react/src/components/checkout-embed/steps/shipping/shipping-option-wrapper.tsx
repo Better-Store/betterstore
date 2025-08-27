@@ -18,7 +18,10 @@ export default function ShippingOptionWrapper({
   locale?: string;
   countryCode?: string;
 }) {
-  if (rate.provider === "zasilkovna") {
+  const isAutoRate =
+    rate.type === "CUSTOM_SHIPPING_VENDOR" || rate.type === "PLATFORM_CARRIER";
+
+  if (isAutoRate && rate.providerId === "zasilkovna") {
     return (
       <ZasilkovnaShippingOption
         onPickupPointSelected={onPickupPointSelected}

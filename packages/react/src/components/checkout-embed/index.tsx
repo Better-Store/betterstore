@@ -73,7 +73,7 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
   useEffect(() => {
     if (checkout) {
       const areAllShipmentsFilled = checkout.shipments.every(
-        (shipment) => shipment.shipmentData?.provider
+        (shipment) => shipment.shipmentData?.rateId
       );
 
       if (areAllShipmentsFilled) {

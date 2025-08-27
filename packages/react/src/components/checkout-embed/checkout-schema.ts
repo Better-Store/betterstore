@@ -26,11 +26,12 @@ export const customerSchema = z.object({
 // Shipping method schema
 const shippingMethodSchema = z.object({
   rateId: z.string().min(1, "required_error"),
-  provider: z.string().min(1, "required_error"),
+  providerId: z.optional(z.string()),
   priceInCents: z.number().min(1, "required_error"),
-  name: z.string().min(1, "required_error"),
   pickupPointId: z.string().optional(),
-  pickupPointDisplayName: z.string().optional(),
+
+  pickupPointDisplayName: z.string().optional(), // Only for display purposes
+  displayName: z.string(), // Only for display purposes
 });
 
 export const shipmentsFormSchema = z
