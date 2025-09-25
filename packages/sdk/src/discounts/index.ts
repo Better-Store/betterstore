@@ -1,5 +1,10 @@
+import {
+  ListDiscountsParams,
+  ListDiscountsResponse,
+  RetrieveDiscountParams,
+  RetrieveDiscountResponse,
+} from "@betterstore/bridge";
 import { ApiError, createApiClient } from "../utils/axios";
-import { Discount, ListDiscountsParams, RetrieveDiscountParams } from "./types";
 
 class Discounts {
   private apiClient: ReturnType<typeof createApiClient>;
@@ -8,44 +13,43 @@ class Discounts {
     this.apiClient = createApiClient(apiKey, proxy);
   }
 
-  async list(params?: ListDiscountsParams): Promise<Discount[]> {
-    const queryParams = new URLSearchParams();
-
-    if (params) {
-      queryParams.set("params", JSON.stringify(params));
-    }
-
-    const data: Discount[] | ApiError = await this.apiClient.get(
-      `/discounts?${queryParams.toString()}`
+  async list<T extends ListDiscountsParams>(
+    params?: T
+  ): Promise<ListDiscountsResponse> {
+    const data: ListDiscountsResponse | ApiError = await this.apiClient.post(
+      "/discounts",
+      params
     );
 
-    if (!data || !Array.isArray(data) || ("isError" in data && data.isError)) {
-      return [];
+    if (
+      !data ||
+      !Array.isArray(data) ||
+      ("isError" in data && data.isError) ||
+      !("discounts" in data)
+    ) {
+      return {
+        discounts: [],
+      };
     }
 
     return data;
   }
 
-  async retrieve(params: RetrieveDiscountParams): Promise<Discount | null> {
-    if ("code" in params) {
-      const data: Discount | ApiError = await this.apiClient.get(
-        `/discounts/code/${params.code}`
-      );
-
-      if (("isError" in data && data.isError) || !data || !("id" in data)) {
-        console.error(`Discount with code ${params.code} not found`);
-        return null;
-      }
-
-      return data;
-    }
-
-    const data: Discount | ApiError = await this.apiClient.get(
-      `/discounts/id/${params.id}`
+  async retrieve<T extends RetrieveDiscountParams>(
+    params: T
+  ): Promise<RetrieveDiscountResponse | null> {
+    const data: RetrieveDiscountResponse | ApiError = await this.apiClient.post(
+      `/discounts/retrieve`,
+      params
     );
 
-    if (("isError" in data && data.isError) || !data || !("id" in data)) {
-      console.error(`Discount with id ${params.id} not found`);
+    if (
+      ("isError" in data && data.isError) ||
+      !data ||
+      !("id" in data) ||
+      !("discount" in data)
+    ) {
+      console.error(`Discount not found`);
       return null;
     }
 

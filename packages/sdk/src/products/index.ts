@@ -1,10 +1,10 @@
-import { ApiError, createApiClient } from "../utils/axios";
 import {
   ListProductsParams,
-  Product,
-  ProductWithoutVariants,
+  ListProductsResponse,
   RetrieveProductParams,
-} from "./types";
+  RetrieveProductResponse,
+} from "@betterstore/bridge";
+import { ApiError, createApiClient } from "../utils/axios";
 
 class Products {
   private apiClient: ReturnType<typeof createApiClient>;
@@ -13,52 +13,45 @@ class Products {
     this.apiClient = createApiClient(apiKey, proxy);
   }
 
-  async list(params?: ListProductsParams): Promise<ProductWithoutVariants[]> {
-    const queryParams = new URLSearchParams();
-
-    if (params) {
-      queryParams.set("params", JSON.stringify(params));
-    }
-
-    const data: ProductWithoutVariants[] | ApiError = await this.apiClient.get(
-      `/products?${queryParams.toString()}`
+  async list<T extends ListProductsParams>(
+    params?: T
+  ): Promise<ListProductsResponse<T>> {
+    const data: ListProductsResponse<T> | ApiError = await this.apiClient.post(
+      "/products",
+      params
     );
 
-    if (!data || !Array.isArray(data) || ("isError" in data && data.isError)) {
-      return [];
+    if (
+      !data ||
+      !Array.isArray(data) ||
+      ("isError" in data && data.isError) ||
+      !("products" in data)
+    ) {
+      return {
+        products: [],
+      };
     }
 
     return data;
   }
 
-  async retrieve(params: RetrieveProductParams): Promise<Product | null> {
-    if ("seoHandle" in params && typeof params?.seoHandle === "string") {
-      const data: Product | ApiError = await this.apiClient.get(
-        `/products/${params.seoHandle}`
-      );
+  async retrieve<T extends RetrieveProductParams>(
+    params: T
+  ): Promise<RetrieveProductResponse<T> | null> {
+    const data: RetrieveProductResponse<T> | ApiError =
+      await this.apiClient.post("/products/retrieve", params);
 
-      if (("isError" in data && data.isError) || !data || !("id" in data)) {
-        console.error(`Product with seoHandle ${params.seoHandle} not found`);
-        return null;
-      }
-
-      return data;
+    if (
+      ("isError" in data && data.isError) ||
+      !data ||
+      !("id" in data) ||
+      !("product" in data)
+    ) {
+      console.error(`Product not found`);
+      return null;
     }
 
-    if ("id" in params && typeof params?.id === "string") {
-      const data: Product | ApiError = await this.apiClient.get(
-        `/products/id/${params.id}`
-      );
-
-      if (("isError" in data && data.isError) || !data || !("id" in data)) {
-        console.error(`Product with id ${params.id} not found`);
-        return null;
-      }
-
-      return data;
-    }
-
-    return null;
+    return data;
   }
 }
 

@@ -1,4 +1,4 @@
-import { ShippingRate } from "@betterstore/sdk";
+import { ShippingRate } from "@betterstore/bridge";
 import React from "react";
 import ZasilkovnaShippingOption from "./providers/zasilkovna";
 

@@ -1,8 +1,5 @@
-import {
-  CheckoutSession,
-  CheckoutUpdateParams,
-  ShippingRate,
-} from "../checkout/types";
+import { GetShippingRatesResponse } from "@betterstore/bridge";
+import { CheckoutSession, CheckoutUpdateParams } from "../checkout/types";
 import {
   CustomerCreateParams,
   Customer as CustomerType,
@@ -127,14 +124,14 @@ class Client {
   async getCheckoutShippingRates(
     clientSecret: string,
     checkoutId: string
-  ): Promise<ShippingRate[]> {
+  ): Promise<GetShippingRatesResponse> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const data: ShippingRate[] | ApiError = await apiClient.get(
-      `/checkout/shipping/${checkoutId}`
+    const data: GetShippingRatesResponse | ApiError = await apiClient.get(
+      `/checkout/${checkoutId}/shipping/rates`
     );
 
-    if (("isError" in data && data.isError) || !data || !Array.isArray(data)) {
-      return [];
+    if (("isError" in data && data.isError) || !data || !("rates" in data)) {
+      return {};
     }
 
     return data;

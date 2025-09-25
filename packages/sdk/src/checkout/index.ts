@@ -1,5 +1,5 @@
+import { GetShippingRatesResponse } from "@betterstore/bridge";
 import { ApiError, createApiClient } from "../utils/axios";
-import { GetShippingRatesResponse } from "./shipping.types";
 import {
   CheckoutCreateParams,
   CheckoutSession,

@@ -1,8 +1,5 @@
-import {
-  CheckoutSession,
-  createStoreClient,
-  ShippingRate,
-} from "@betterstore/sdk";
+import { GetShippingRatesResponse } from "@betterstore/bridge";
+import { CheckoutSession, createStoreClient } from "@betterstore/sdk";
 import { StripeElementLocale } from "@stripe/stripe-js";
 import { useCallback, useEffect, useState } from "react";
 import { AppearanceConfig, Fonts } from "./appearance";
@@ -74,7 +71,9 @@ export default function CheckoutForm({
     checkoutId: storedCheckoutId,
     setCheckoutId,
   } = useFormStore();
-  const [shippingRates, setShippingRates] = useState<ShippingRate[]>([]);
+  const [shippingRates, setShippingRates] = useState<GetShippingRatesResponse>(
+    {}
+  );
 
   const validateStep = useCallback(() => {
     if (step === "customer") return;
@@ -170,7 +169,7 @@ export default function CheckoutForm({
 
   useEffect(() => {
     if (step !== "shipping") return;
-    if (shippingRates.length > 0) return;
+    if (Object.keys(shippingRates).length > 0) return;
 
     const getShippingRates = async () => {
       try {
@@ -181,7 +180,7 @@ export default function CheckoutForm({
         setShippingRates(shippingRates);
       } catch (error) {
         console.error("Failed to load shipping rates:", error);
-        setShippingRates([]);
+        setShippingRates({});
       }
     };
 

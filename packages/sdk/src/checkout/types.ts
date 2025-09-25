@@ -1,10 +1,12 @@
+import { Address } from "../types";
 import {
-  Address,
   Discount,
   Product,
   ProductVariant,
   ProductWithoutVariants,
-} from "../types";
+} from "./other-types";
+
+export * from "./other-types";
 
 type ProductData = Pick<
   Product,
@@ -80,8 +82,6 @@ export interface CheckoutUpdateParams {
   customerId?: string;
   shipments?: CheckoutShipment[];
 }
-
-export type { GetShippingRatesResponse, ShippingRate } from "./shipping.types";
 
 type ShipmentData = {
   rateId: string;

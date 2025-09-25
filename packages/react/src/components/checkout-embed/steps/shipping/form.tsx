@@ -3,7 +3,8 @@ import { Button } from "@/react/components/ui/button";
 import { Form, FormMessage } from "@/react/components/ui/form";
 import { Skeleton } from "@/react/components/ui/skeleton";
 import { storeHelpers } from "@/react/lib/betterstore";
-import { CheckoutSession, ShippingRate } from "@betterstore/sdk";
+import { GetShippingRatesResponse, ShippingRate } from "@betterstore/bridge";
+import { CheckoutSession } from "@betterstore/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { ChevronLeft } from "lucide-react";
@@ -17,7 +18,7 @@ import { FormStore } from "../../useFormStore";
 import ShippingOptionWrapper from "./shipping-option-wrapper";
 
 interface ShipmentsFormProps {
-  shippingRates: ShippingRate[];
+  shippingRates: GetShippingRatesResponse;
   initialData?: ShipmentsFormData;
   onSubmit: (data: ShipmentsFormData) => void;
   onBack: () => void;
@@ -107,7 +108,7 @@ export default function ShipmentsForm({
             <SingleShipmentSection
               key={shipment.id}
               shipment={shipment}
-              shippingRates={shippingRates}
+              shippingRates={shippingRates[shipment.id] ?? []}
               form={form}
               setFormData={setFormData}
               formData={formData}
