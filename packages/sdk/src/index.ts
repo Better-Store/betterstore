@@ -4,7 +4,6 @@ import Client from "./client";
 import Collections from "./collections";
 import Customer from "./customer";
 import Discounts from "./discounts";
-import Helpers from "./helpers";
 import Products from "./products";
 
 export default function createBetterStore(config: {
@@ -28,9 +27,3 @@ export default function createBetterStore(config: {
 export function createStoreClient(config?: { proxy?: string }) {
   return new Client(config?.proxy);
 }
-
-export function createStoreHelpers(config?: { proxy?: string }) {
-  return new Helpers(config?.proxy);
-}
-
-export * from "./types";

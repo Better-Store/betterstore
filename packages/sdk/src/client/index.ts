@@ -1,12 +1,14 @@
-import { GetShippingRatesResponse } from "@betterstore/bridge";
-import { CheckoutSession, CheckoutUpdateParams } from "../checkout/types";
 import {
+  AutosuggestAddressResult,
+  CheckoutSession,
+  CheckoutUpdateParams,
   CustomerCreateParams,
-  Customer as CustomerType,
+  CustomerResponse,
   CustomerUpdateParams,
-} from "../customer/types";
+  GetShippingRatesResponse,
+  LookupAddressResult,
+} from "@betterstore/bridge";
 import { ApiError, createApiClient } from "../utils/axios";
-import { AutosuggestAddressResult, LookupAddressResult } from "./types";
 
 class Client {
   public proxy?: string;
@@ -178,9 +180,9 @@ class Client {
   async createCustomer(
     clientSecret: string,
     params: CustomerCreateParams
-  ): Promise<CustomerType> {
+  ): Promise<CustomerResponse> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const data: CustomerType | ApiError = await apiClient.post(
+    const data: CustomerResponse | ApiError = await apiClient.post(
       "/customer",
       params
     );
@@ -198,9 +200,9 @@ class Client {
   async retrieveCustomer(
     clientSecret: string,
     idOrEmail: string
-  ): Promise<CustomerType | null> {
+  ): Promise<CustomerResponse | null> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const data: CustomerType | ApiError = await apiClient.get(
+    const data: CustomerResponse | ApiError = await apiClient.get(
       `/customer/${idOrEmail}`
     );
 
@@ -219,9 +221,9 @@ class Client {
     clientSecret: string,
     customerId: string,
     params: CustomerUpdateParams
-  ): Promise<CustomerType | null> {
+  ): Promise<CustomerResponse | null> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const data: CustomerType | ApiError = await apiClient.put(
+    const data: CustomerResponse | ApiError = await apiClient.put(
       `/customer/${customerId}`,
       params
     );

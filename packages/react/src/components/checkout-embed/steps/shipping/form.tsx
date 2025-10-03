@@ -2,9 +2,12 @@ import SubmitButton from "@/react/components/compounds/form/submit-button";
 import { Button } from "@/react/components/ui/button";
 import { Form, FormMessage } from "@/react/components/ui/form";
 import { Skeleton } from "@/react/components/ui/skeleton";
-import { storeHelpers } from "@/react/lib/betterstore";
-import { GetShippingRatesResponse, ShippingRate } from "@betterstore/bridge";
-import { CheckoutSession } from "@betterstore/sdk";
+import {
+  CheckoutSession,
+  formatPrice,
+  GetShippingRatesResponse,
+  ShippingRate,
+} from "@betterstore/bridge";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import { ChevronLeft } from "lucide-react";
@@ -188,11 +191,7 @@ const SingleShipmentSection = ({
           `${shipmentId}.pickupPointDisplayName`
         );
         const intPrice = Math.ceil(Number(rate.priceInCents));
-        const displayPrice = storeHelpers.formatPrice(
-          intPrice,
-          currency,
-          exchangeRate
-        );
+        const displayPrice = formatPrice(intPrice, currency, exchangeRate);
 
         const isFixedRate = rate.type === "FIXED";
         const isAutoRate =

@@ -1,10 +1,10 @@
-import { GetShippingRatesResponse } from "@betterstore/bridge";
-import { ApiError, createApiClient } from "../utils/axios";
 import {
   CheckoutCreateParams,
   CheckoutSession,
   CheckoutUpdateParams,
-} from "./types";
+  GetShippingRatesResponse,
+} from "@betterstore/bridge";
+import { ApiError, createApiClient } from "../utils/axios";
 
 class Checkout {
   private apiClient: ReturnType<typeof createApiClient>;

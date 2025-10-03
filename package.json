@@ -11,6 +11,7 @@
     "generate": "turbo run generate",
     "prep": "changeset && changeset version && pnpm run format && git add .",
     "release": "turbo run build && turbo run check-types lint && changeset publish",
+    "bridge:update": "pnpm i @betterstore/bridge@latest --filter=@betterstore/react --filter=@betterstore/sdk",
     "prepare": "husky"
   },
   "devDependencies": {

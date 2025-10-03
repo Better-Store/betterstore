@@ -1,5 +1,9 @@
-import { GetShippingRatesResponse } from "@betterstore/bridge";
-import { CheckoutSession, createStoreClient } from "@betterstore/sdk";
+import {
+  CheckoutSession,
+  CheckoutUpdateParams,
+  GetShippingRatesResponse,
+} from "@betterstore/bridge";
+import { createStoreClient } from "@betterstore/sdk";
 import { StripeElementLocale } from "@stripe/stripe-js";
 import { useCallback, useEffect, useState } from "react";
 import { AppearanceConfig, Fonts } from "./appearance";
@@ -118,11 +122,14 @@ export default function CheckoutForm({
             email: customer.email ?? "",
             address: {
               line1: customer.address?.line1 ?? "",
-              line2: customer.address?.line2 ?? "",
+              line2: customer.address?.line2 ?? null,
               city: customer.address?.city ?? "",
+              province: customer.address?.province ?? null,
+              provinceCode: customer.address?.provinceCode ?? null,
               zipCode: customer.address?.zipCode ?? "",
               country: customer.address?.country ?? "",
               countryCode: customer.address?.countryCode ?? "",
+              company: customer.address?.company ?? null,
             },
           },
         });
@@ -155,11 +162,14 @@ export default function CheckoutForm({
           email: customer.email ?? "",
           address: {
             line1: customer.address?.line1 ?? "",
-            line2: customer.address?.line2 ?? "",
+            line2: customer.address?.line2 ?? null,
             city: customer.address?.city ?? "",
+            province: customer.address?.province ?? null,
+            provinceCode: customer.address?.provinceCode ?? null,
             zipCode: customer.address?.zipCode ?? "",
             country: customer.address?.country ?? "",
             countryCode: customer.address?.countryCode ?? "",
+            company: customer.address?.company ?? null,
           },
         },
       });
@@ -251,15 +261,18 @@ export default function CheckoutForm({
 
     setFormData(newFormData);
 
-    const shipments = Object.entries(data).map(([id, shipmentFormData]) => ({
-      id: id,
-      shipmentData: {
-        rateId: shipmentFormData.rateId,
-        providerId: shipmentFormData.providerId,
-        priceInCents: shipmentFormData.priceInCents,
-        pickupPointId: shipmentFormData.pickupPointId,
-      },
-    }));
+    const shipments = Object.entries(data).map(
+      ([id, shipmentFormData]) =>
+        ({
+          id: id,
+          shipmentData: {
+            rateId: shipmentFormData.rateId,
+            providerId: shipmentFormData.providerId,
+            priceInCents: shipmentFormData.priceInCents,
+            pickupPointId: shipmentFormData.pickupPointId,
+          },
+        }) satisfies NonNullable<CheckoutUpdateParams["shipments"]>[number]
+    );
 
     await storeClient.updateCheckout(clientSecret, checkoutId, {
       shipments,

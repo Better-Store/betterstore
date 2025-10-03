@@ -4,7 +4,8 @@ import { CustomerFormData } from "@/react/components/checkout-embed/checkout-sch
 import CompoboxGroupProps from "@/react/components/compounds/form/compobox-group";
 import InputGroup from "@/react/components/compounds/form/input-group";
 import { cn } from "@/react/lib/utils";
-import { AutosuggestAddressResult, createStoreClient } from "@betterstore/sdk";
+import { AutosuggestAddressResult } from "@betterstore/bridge";
+import { createStoreClient } from "@betterstore/sdk";
 import { ArrowRight, Loader, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";

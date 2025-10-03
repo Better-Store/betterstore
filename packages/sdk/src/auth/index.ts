@@ -1,6 +1,6 @@
+import { CustomerSession } from "@betterstore/bridge";
 import { ApiError, createApiClient } from "../utils/axios";
 import { OTP } from "./providers/otp";
-import { CustomerSession } from "./types";
 
 class Auth {
   private apiClient: ReturnType<typeof createApiClient>;

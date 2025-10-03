@@ -1,5 +1,6 @@
 import { default as createI18nInstance, Locale } from "@/react/i18n";
-import { CheckoutSession, createStoreClient } from "@betterstore/sdk";
+import { CheckoutSession } from "@betterstore/bridge";
+import { createStoreClient } from "@betterstore/sdk";
 import React, { memo, useEffect, useRef, useState } from "react";
 import { ShadowWrapper } from "../shadow-wrapper";
 import { Toaster } from "../ui/sonner";

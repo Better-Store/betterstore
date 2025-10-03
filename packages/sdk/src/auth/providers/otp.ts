@@ -1,4 +1,3 @@
-import { createApiClient } from "../../utils/axios";
 import {
   OTPLoginParams,
   OTPLoginResponse,
@@ -6,7 +5,8 @@ import {
   OTPSignupResponse,
   OTPVerifyParams,
   OTPVerifyResponse,
-} from "../types";
+} from "@betterstore/bridge";
+import { createApiClient } from "../../utils/axios";
 
 export class OTP {
   private apiClient: ReturnType<typeof createApiClient>;

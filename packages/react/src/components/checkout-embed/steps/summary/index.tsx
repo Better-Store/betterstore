@@ -1,6 +1,5 @@
 import { Button } from "@/react/components/ui/button";
-import { storeHelpers } from "@/react/lib/betterstore";
-import { CheckoutSession, LineItem } from "@betterstore/sdk";
+import { CheckoutSession, formatPrice } from "@betterstore/bridge";
 import clsx from "clsx";
 import { ChevronDown, X } from "lucide-react";
 import { useState } from "react";
@@ -19,7 +18,7 @@ export default function CheckoutSummary({
   removeDiscount,
 }: {
   appliedDiscounts: CheckoutSession["appliedDiscounts"];
-  lineItems: LineItem[];
+  lineItems: CheckoutSession["lineItems"];
   shipping?: number | null;
   tax?: number | null;
   currency: string;
@@ -88,7 +87,7 @@ export default function CheckoutSummary({
         </div>
 
         <p className="text-lg font-bold tracking-tight md:hidden">
-          {storeHelpers.formatPrice(total, currency, exchangeRate)}
+          {formatPrice(total, currency, exchangeRate)}
         </p>
         <Button
           className="max-sm:hidden"
@@ -110,7 +109,7 @@ export default function CheckoutSummary({
       >
         <div className="flex justify-between">
           <p>{t("CheckoutEmbed.Summary.subtotal")}</p>
-          <p>{storeHelpers.formatPrice(subtotal, currency, exchangeRate)}</p>
+          <p>{formatPrice(subtotal, currency, exchangeRate)}</p>
         </div>
 
         <div className="flex justify-between">
@@ -119,11 +118,7 @@ export default function CheckoutSummary({
             {isShippingFree
               ? t("CheckoutEmbed.Summary.free")
               : shippingPrice
-                ? storeHelpers.formatPrice(
-                    shippingPrice,
-                    currency,
-                    exchangeRate
-                  )
+                ? formatPrice(shippingPrice, currency, exchangeRate)
                 : t("CheckoutEmbed.Summary.calculatedAtNextStep")}
           </p>
         </div>
@@ -131,7 +126,7 @@ export default function CheckoutSummary({
         {!!tax && (
           <div className="flex justify-between">
             <p>{t("CheckoutEmbed.Summary.tax")}</p>
-            <p>{storeHelpers.formatPrice(tax, currency, exchangeRate)}</p>
+            <p>{formatPrice(tax, currency, exchangeRate)}</p>
           </div>
         )}
 
@@ -146,19 +141,13 @@ export default function CheckoutSummary({
               label={(discount?.code || discount?.title) ?? ""}
               canRemove={discount.method === "CODE"}
             />
-            <p>- {storeHelpers.formatPrice(amount, currency, exchangeRate)}</p>
+            <p>- {formatPrice(amount, currency, exchangeRate)}</p>
           </div>
         ))}
 
         <div className="flex items-center justify-between font-bold">
           <p>{t("CheckoutEmbed.Summary.total")}</p>
-          <p>
-            {storeHelpers.formatPrice(
-              totalWithDiscounts,
-              currency,
-              exchangeRate
-            )}
-          </p>
+          <p>{formatPrice(totalWithDiscounts, currency, exchangeRate)}</p>
         </div>
       </div>
 
@@ -275,7 +264,7 @@ export default function CheckoutSummary({
                 {isDiscounted ? (
                   <div className="flex flex-col">
                     <p className="text-muted-foreground -mb-0.5 text-sm font-medium line-through">
-                      {storeHelpers.formatPrice(
+                      {formatPrice(
                         finalItem?.priceInCents ?? 0,
                         currency,
                         exchangeRate
@@ -284,16 +273,12 @@ export default function CheckoutSummary({
                     <p className="text-base font-medium">
                       {discountedPrice <= 0
                         ? t("CheckoutEmbed.Summary.free")
-                        : storeHelpers.formatPrice(
-                            discountedPrice,
-                            currency,
-                            exchangeRate
-                          )}
+                        : formatPrice(discountedPrice, currency, exchangeRate)}
                     </p>
                   </div>
                 ) : (
                   <p className="text-base font-medium">
-                    {storeHelpers.formatPrice(
+                    {formatPrice(
                       finalItem?.priceInCents ?? 0,
                       currency,
                       exchangeRate

@@ -1,11 +1,11 @@
-import { ApiError, createApiClient } from "../utils/axios";
 import {
   CustomerCreateParams,
+  CustomerResponse,
   CustomerSubscription,
   CustomerSubscriptionUpdateParams,
-  Customer as CustomerType,
   CustomerUpdateParams,
-} from "./types";
+} from "@betterstore/bridge";
+import { ApiError, createApiClient } from "../utils/axios";
 
 class Customer {
   private apiClient: ReturnType<typeof createApiClient>;
@@ -17,8 +17,8 @@ class Customer {
   /**
    * Create a new customer
    */
-  async create(params: CustomerCreateParams): Promise<CustomerType> {
-    const data: CustomerType | ApiError = await this.apiClient.post(
+  async create(params: CustomerCreateParams): Promise<CustomerResponse> {
+    const data: CustomerResponse | ApiError = await this.apiClient.post(
       "/customer",
       params
     );
@@ -33,8 +33,8 @@ class Customer {
   /**
    * Retrieve a customer by ID or email
    */
-  async retrieve(idOrEmail: string): Promise<CustomerType | null> {
-    const data: CustomerType | ApiError = await this.apiClient.get(
+  async retrieve(idOrEmail: string): Promise<CustomerResponse | null> {
+    const data: CustomerResponse | ApiError = await this.apiClient.get(
       `/customer/${idOrEmail}`
     );
 
@@ -52,8 +52,8 @@ class Customer {
   async update(
     customerId: string,
     params: CustomerUpdateParams
-  ): Promise<CustomerType | null> {
-    const data: CustomerType | ApiError = await this.apiClient.put(
+  ): Promise<CustomerResponse | null> {
+    const data: CustomerResponse | ApiError = await this.apiClient.put(
       `/customer/${customerId}`,
       params
     );

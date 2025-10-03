@@ -66,8 +66,8 @@ importers:
   packages/react:
     dependencies:
       '@betterstore/bridge':
-        specifier: ^0.0.2
-        version: 0.0.2
+        specifier: ^0.0.23
+        version: 0.0.23(typescript@5.8.2)
       '@betterstore/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -244,8 +244,8 @@ importers:
   packages/sdk:
     dependencies:
       '@betterstore/bridge':
-        specifier: ^0.0.2
-        version: 0.0.2
+        specifier: ^0.0.23
+        version: 0.0.23(typescript@5.8.2)
       axios:
         specifier: ^1.8.2
         version: 1.10.0
@@ -376,8 +376,8 @@ packages:
     resolution: {integrity: sha512-8OLQgDScAOHXnAz2cV+RfzzNMipuLVBz2biuAJFMV9bfkNf393je3VM8CLkjQodW5+iWsSJdSgSWT6rsZoXHPw==}
     engines: {node: '>=6.9.0'}
 
-  '@betterstore/bridge@0.0.2':
-    resolution: {integrity: sha512-DMIznjhdQCDnYZ9IUaveY/SeSfLw/hy9FLKTxRVgtatnrLDuKZ0haq9q9RKOKOFvDLiAU97iaSOhJhuegrthaQ==}
+  '@betterstore/bridge@0.0.23':
+    resolution: {integrity: sha512-2HnZC+5ZsuSKx/atuBfUJRfmvZqm95rRLzAgODtbUNd6gGH0xfAdMhHqa1+nZ7V9JGQNmr/OGgftv+WIf5nUfw==}
 
   '@changesets/apply-release-plan@7.0.12':
     resolution: {integrity: sha512-EaET7As5CeuhTzvXTQCRZeBUcisoYPDDcXvgTE/2jmmypKp0RC7LxKj/yzqeh/1qFTZI7oDGFcL1PHRuQuketQ==}
@@ -724,6 +724,18 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@prisma/client@6.16.2':
+    resolution: {integrity: sha512-E00PxBcalMfYO/TWnXobBVUai6eW/g5OsifWQsQDzJYm7yaY+IRLo7ZLsaefi0QkTpxfuhFcQ/w180i6kX3iJw==}
+    engines: {node: '>=18.18'}
+    peerDependencies:
+      prisma: '*'
+      typescript: '>=5.1.0'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+      typescript:
+        optional: true
 
   '@radix-ui/primitive@1.1.2':
     resolution: {integrity: sha512-XnbHrrprsNqZKQhStrSwgRUQzoCI1glLzdw79xiZPoofhGICeZRSQ3dIxAKH1gb3OHfNf4d6f+vAv3kil2eggA==}
@@ -4479,9 +4491,13 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@betterstore/bridge@0.0.2':
+  '@betterstore/bridge@0.0.23(typescript@5.8.2)':
     dependencies:
+      '@prisma/client': 6.16.2(typescript@5.8.2)
       zod: 3.25.67
+    transitivePeerDependencies:
+      - prisma
+      - typescript
 
   '@changesets/apply-release-plan@7.0.12':
     dependencies:
@@ -4883,6 +4899,10 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@prisma/client@6.16.2(typescript@5.8.2)':
+    optionalDependencies:
+      typescript: 5.8.2
 
   '@radix-ui/primitive@1.1.2': {}
 
