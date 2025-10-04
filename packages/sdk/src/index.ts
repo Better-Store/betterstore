@@ -6,6 +6,8 @@ import Customer from "./customer";
 import Discounts from "./discounts";
 import Products from "./products";
 
+export * from "./types";
+
 export default function createBetterStore(config: {
   apiKey: string;
   proxy?: string;
