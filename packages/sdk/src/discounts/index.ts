@@ -4,6 +4,7 @@ import {
   RetrieveDiscountParams,
   RetrieveDiscountResponse,
 } from "@betterstore/bridge";
+import { FormatResponseForSDK } from "../_utils/helpers";
 import { ApiError, createApiClient } from "../utils/axios";
 
 class Discounts {
@@ -15,7 +16,7 @@ class Discounts {
 
   async list<T extends ListDiscountsParams>(
     params?: T
-  ): Promise<ListDiscountsResponse> {
+  ): Promise<FormatResponseForSDK<ListDiscountsResponse>> {
     const data: ListDiscountsResponse | ApiError = await this.apiClient.post(
       "/discounts",
       params
@@ -27,17 +28,15 @@ class Discounts {
       ("isError" in data && data.isError) ||
       !("discounts" in data)
     ) {
-      return {
-        discounts: [],
-      };
+      return [];
     }
 
-    return data;
+    return data.discounts;
   }
 
   async retrieve<T extends RetrieveDiscountParams>(
     params: T
-  ): Promise<RetrieveDiscountResponse | null> {
+  ): Promise<FormatResponseForSDK<RetrieveDiscountResponse> | null> {
     const data: RetrieveDiscountResponse | ApiError = await this.apiClient.post(
       `/discounts/retrieve`,
       params
@@ -53,7 +52,7 @@ class Discounts {
       return null;
     }
 
-    return data;
+    return data.discount;
   }
 }
 

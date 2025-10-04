@@ -4,6 +4,7 @@ import {
   RetrieveProductParams,
   RetrieveProductResponse,
 } from "@betterstore/bridge";
+import { FormatResponseForSDK } from "../_utils/helpers";
 import { ApiError, createApiClient } from "../utils/axios";
 
 class Products {
@@ -15,7 +16,7 @@ class Products {
 
   async list<T extends ListProductsParams>(
     params?: T
-  ): Promise<ListProductsResponse<T>> {
+  ): Promise<FormatResponseForSDK<ListProductsResponse<T>>> {
     const data: ListProductsResponse<T> | ApiError = await this.apiClient.post(
       "/products",
       params
@@ -27,17 +28,15 @@ class Products {
       ("isError" in data && data.isError) ||
       !("products" in data)
     ) {
-      return {
-        products: [],
-      };
+      return [];
     }
 
-    return data;
+    return data.products;
   }
 
   async retrieve<T extends RetrieveProductParams>(
     params: T
-  ): Promise<RetrieveProductResponse<T> | null> {
+  ): Promise<FormatResponseForSDK<RetrieveProductResponse<T>> | null> {
     const data: RetrieveProductResponse<T> | ApiError =
       await this.apiClient.post("/products/retrieve", params);
 
@@ -51,7 +50,7 @@ class Products {
       return null;
     }
 
-    return data;
+    return data.product;
   }
 }
 
