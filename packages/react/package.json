@@ -1,6 +1,6 @@
 {
   "name": "@betterstore/react",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -51,7 +51,7 @@
     }
   },
   "dependencies": {
-    "@betterstore/bridge": "^0.0.24",
+    "@betterstore/bridge": "^0.0.25",
     "@betterstore/sdk": "workspace:*",
     "@hookform/resolvers": "^4.1.3",
     "@radix-ui/react-checkbox": "^1.3.2",

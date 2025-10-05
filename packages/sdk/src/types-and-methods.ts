@@ -27,7 +27,8 @@ export type {
   OTPSignupResponse,
   OTPVerifyParams,
   OTPVerifyResponse,
-  ProductVariant,
+  ProductOption,
+  // ProductVariant,
   RetrieveCollectionParams,
   RetrieveCollectionResponse,
   RetrieveDiscountParams,
@@ -36,5 +37,6 @@ export type {
   //   ZasilkovnaPlatformCarrierRate,
   RetrieveProductParams,
   RetrieveProductResponse,
+  VariantOption,
 } from "@betterstore/bridge";
 export * from "./methods/cart-discounts";

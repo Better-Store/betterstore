@@ -1,6 +1,6 @@
 {
   "name": "@betterstore/sdk",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,7 +24,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
-    "@betterstore/bridge": "^0.0.24",
+    "@betterstore/bridge": "^0.0.25",
     "axios": "^1.8.2",
     "zod": "^3.24.2"
   },
