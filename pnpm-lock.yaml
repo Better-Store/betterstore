@@ -66,8 +66,8 @@ importers:
   packages/react:
     dependencies:
       '@betterstore/bridge':
-        specifier: ^0.0.23
-        version: 0.0.23(typescript@5.8.2)
+        specifier: ^0.0.24
+        version: 0.0.24(typescript@5.8.2)
       '@betterstore/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -244,8 +244,8 @@ importers:
   packages/sdk:
     dependencies:
       '@betterstore/bridge':
-        specifier: ^0.0.23
-        version: 0.0.23(typescript@5.8.2)
+        specifier: ^0.0.24
+        version: 0.0.24(typescript@5.8.2)
       axios:
         specifier: ^1.8.2
         version: 1.10.0
@@ -376,8 +376,8 @@ packages:
     resolution: {integrity: sha512-8OLQgDScAOHXnAz2cV+RfzzNMipuLVBz2biuAJFMV9bfkNf393je3VM8CLkjQodW5+iWsSJdSgSWT6rsZoXHPw==}
     engines: {node: '>=6.9.0'}
 
-  '@betterstore/bridge@0.0.23':
-    resolution: {integrity: sha512-2HnZC+5ZsuSKx/atuBfUJRfmvZqm95rRLzAgODtbUNd6gGH0xfAdMhHqa1+nZ7V9JGQNmr/OGgftv+WIf5nUfw==}
+  '@betterstore/bridge@0.0.24':
+    resolution: {integrity: sha512-8fOP0oTnaSOBASvQvwHaI7Cj2LsWcTVpZibkRm2M/zGrzv/R6Jgzc4wOzlpdyMfSgAmcZ5gKAuJGzQWtutlt+Q==}
 
   '@changesets/apply-release-plan@7.0.12':
     resolution: {integrity: sha512-EaET7As5CeuhTzvXTQCRZeBUcisoYPDDcXvgTE/2jmmypKp0RC7LxKj/yzqeh/1qFTZI7oDGFcL1PHRuQuketQ==}
@@ -4491,7 +4491,7 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
-  '@betterstore/bridge@0.0.23(typescript@5.8.2)':
+  '@betterstore/bridge@0.0.24(typescript@5.8.2)':
     dependencies:
       '@prisma/client': 6.16.2(typescript@5.8.2)
       zod: 3.25.67

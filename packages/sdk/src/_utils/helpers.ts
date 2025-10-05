@@ -5,3 +5,6 @@ export type FormatResponseForSDK<T extends object> = keyof T extends [
 ]
   ? T
   : T[keyof T];
+
+export type FormatParamsForSDK<GenericType, ConstraintType> = GenericType &
+  Record<Exclude<keyof GenericType, keyof ConstraintType>, never>;

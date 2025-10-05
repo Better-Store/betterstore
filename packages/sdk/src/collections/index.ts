@@ -5,7 +5,7 @@ import {
   RetrieveCollectionResponse,
 } from "@betterstore/bridge";
 import { ApiError, createApiClient } from "../_utils/axios";
-import { FormatResponseForSDK } from "../_utils/helpers";
+import { FormatParamsForSDK, FormatResponseForSDK } from "../_utils/helpers";
 
 class Collections {
   private apiClient: ReturnType<typeof createApiClient>;
@@ -15,7 +15,7 @@ class Collections {
   }
 
   async list<T extends ListCollectionsParams>(
-    params?: T
+    params?: FormatParamsForSDK<T, ListCollectionsParams>
   ): Promise<FormatResponseForSDK<ListCollectionsResponse<T>>> {
     const data: ListCollectionsResponse<T> | ApiError =
       await this.apiClient.post(`/collections`, params);
@@ -33,7 +33,7 @@ class Collections {
   }
 
   async retrieve<T extends RetrieveCollectionParams>(
-    params: T
+    params: FormatParamsForSDK<T, RetrieveCollectionParams>
   ): Promise<FormatResponseForSDK<RetrieveCollectionResponse<T>> | null> {
     const data: RetrieveCollectionResponse<T> | ApiError =
       await this.apiClient.post(`/collections/retrieve`, params);

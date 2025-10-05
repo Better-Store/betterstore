@@ -47,7 +47,7 @@ function calculateDiscountAmount(originalPrice: number, discount?: Discount) {
 
   return {
     finalPrice,
-    discountAmount: discountValueInCents,
+    discountAmount: discountValueInCents ?? 0,
     originalPrice,
     isFree: isFreeDiscount,
     isDiscounted,
@@ -66,5 +66,5 @@ export function findAutomaticProductDiscount({
   const discount = getHighestDiscount(productId, priceInCents, discounts);
   const result = calculateDiscountAmount(priceInCents, discount);
 
-  return result;
+  return { ...result, discount };
 }

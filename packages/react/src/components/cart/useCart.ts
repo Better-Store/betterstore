@@ -51,7 +51,7 @@ const generateLineItemId = (
   );
 };
 
-export const useCart = <
+const createCartStore = <
   ProductType extends
     DefaultLineItemCreateProductType = DefaultLineItemCreateProductType,
 >() =>
@@ -130,3 +130,8 @@ export const useCart = <
       }
     )
   );
+
+export const useCart = <
+  ProductType extends
+    DefaultLineItemCreateProductType = DefaultLineItemCreateProductType,
+>() => createCartStore<ProductType>()();
