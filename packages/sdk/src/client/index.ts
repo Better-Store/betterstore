@@ -8,7 +8,7 @@ import {
   GetShippingRatesResponse,
   LookupAddressResult,
 } from "@betterstore/bridge";
-import { ApiError, createApiClient } from "../utils/axios";
+import { ApiError, createApiClient } from "../_utils/axios";
 
 class Client {
   public proxy?: string;

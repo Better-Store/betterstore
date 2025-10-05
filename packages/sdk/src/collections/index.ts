@@ -4,8 +4,8 @@ import {
   RetrieveCollectionParams,
   RetrieveCollectionResponse,
 } from "@betterstore/bridge";
+import { ApiError, createApiClient } from "../_utils/axios";
 import { FormatResponseForSDK } from "../_utils/helpers";
-import { ApiError, createApiClient } from "../utils/axios";
 
 class Collections {
   private apiClient: ReturnType<typeof createApiClient>;

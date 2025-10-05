@@ -5,7 +5,7 @@ import {
   CustomerSubscriptionUpdateParams,
   CustomerUpdateParams,
 } from "@betterstore/bridge";
-import { ApiError, createApiClient } from "../utils/axios";
+import { ApiError, createApiClient } from "../_utils/axios";
 
 class Customer {
   private apiClient: ReturnType<typeof createApiClient>;

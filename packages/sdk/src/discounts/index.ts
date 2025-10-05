@@ -4,8 +4,8 @@ import {
   RetrieveDiscountParams,
   RetrieveDiscountResponse,
 } from "@betterstore/bridge";
+import { ApiError, createApiClient } from "../_utils/axios";
 import { FormatResponseForSDK } from "../_utils/helpers";
-import { ApiError, createApiClient } from "../utils/axios";
 
 class Discounts {
   private apiClient: ReturnType<typeof createApiClient>;

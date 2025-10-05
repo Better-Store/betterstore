@@ -6,7 +6,7 @@ import {
   OTPVerifyParams,
   OTPVerifyResponse,
 } from "@betterstore/bridge";
-import { createApiClient } from "../../utils/axios";
+import { createApiClient } from "../../_utils/axios";
 
 export class OTP {
   private apiClient: ReturnType<typeof createApiClient>;

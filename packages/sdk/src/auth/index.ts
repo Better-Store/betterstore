@@ -1,5 +1,5 @@
 import { CustomerSession } from "@betterstore/bridge";
-import { ApiError, createApiClient } from "../utils/axios";
+import { ApiError, createApiClient } from "../_utils/axios";
 import { OTP } from "./providers/otp";
 
 class Auth {

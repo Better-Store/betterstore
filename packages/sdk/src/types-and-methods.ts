@@ -37,3 +37,4 @@ export type {
   RetrieveProductParams,
   RetrieveProductResponse,
 } from "@betterstore/bridge";
+export * from "./methods/cart-discounts";
