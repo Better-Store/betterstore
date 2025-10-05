@@ -19,7 +19,7 @@ class Discounts {
   ): Promise<FormatResponseForSDK<ListDiscountsResponse>> {
     const data: ListDiscountsResponse | ApiError = await this.apiClient.post(
       "/discounts",
-      params
+      params ?? {}
     );
 
     if (

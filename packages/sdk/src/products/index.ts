@@ -19,7 +19,7 @@ class Products {
   ): Promise<FormatResponseForSDK<ListProductsResponse<T>>> {
     const data: ListProductsResponse<T> | ApiError = await this.apiClient.post(
       "/products",
-      params
+      params ?? {}
     );
 
     if (

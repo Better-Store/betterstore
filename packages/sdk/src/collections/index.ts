@@ -18,7 +18,7 @@ class Collections {
     params?: FormatParamsForSDK<T, ListCollectionsParams>
   ): Promise<FormatResponseForSDK<ListCollectionsResponse<T>>> {
     const data: ListCollectionsResponse<T> | ApiError =
-      await this.apiClient.post(`/collections`, params);
+      await this.apiClient.post(`/collections`, params ?? {});
 
     if (
       !data ||
