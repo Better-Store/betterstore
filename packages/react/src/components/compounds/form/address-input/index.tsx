@@ -60,6 +60,13 @@ export function AddressInput({
     : [];
 
   useEffect(() => {
+    if (cityInput) {
+      setShowAllInputs(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (!currentAlpha3CountryCode) return;
 
     const country = countries.find(
