@@ -54,11 +54,7 @@ const CheckoutForm = ({
 
   return (
     <form className="w-full pb-40 sm:pb-0" onSubmit={handleSubmit}>
-      {/* @ts-expect-error - Custom element */}
-      <betterstore-checkout-embed-payment-element>
-        <PaymentElement />
-        {/* @ts-expect-error - Custom element */}
-      </betterstore-checkout-embed-payment-element>
+      <PaymentElement />
       {errorMessage && (
         <p className="text-destructive -mb-2 mt-2 text-sm">{errorMessage}</p>
       )}
