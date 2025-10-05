@@ -60,10 +60,6 @@
     @apply border-border outline-ring/50 border-solid;
   }
 
-  .checkout-embed {
-    @apply bg-background text-foreground font-sans;
-  }
-
   h2 {
     @apply text-2xl font-bold tracking-tight;
   }

@@ -2,7 +2,6 @@ import { default as createI18nInstance, Locale } from "@/react/i18n";
 import { CheckoutSession } from "@betterstore/bridge";
 import { createStoreClient } from "@betterstore/sdk";
 import React, { memo, useEffect, useRef, useState } from "react";
-import { ShadowWrapper } from "../shadow-wrapper";
 import { Toaster } from "../ui/sonner";
 import Appearance, { AppearanceConfig, Fonts } from "./appearance";
 import CheckoutForm from "./checkout-form";
@@ -49,7 +48,6 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
     () => createStoreClient({ proxy: clientProxy }),
     [clientProxy]
   );
-  const shadowRef = React.useRef<HTMLDivElement>(null);
 
   React.useMemo(() => createI18nInstance(locale), [locale]);
 
@@ -337,63 +335,57 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
   }, []);
 
   return (
-    <ShadowWrapper shadowRef={shadowRef}>
-      <div className="checkout-embed flex h-max flex-col gap-6 py-4 md:grid md:grid-cols-7 md:gap-0 md:py-12">
-        <Appearance
-          appearance={appearance}
-          fonts={config.fonts}
-          shadowRef={shadowRef}
-        />
+    <div className="flex h-max flex-col gap-6 py-4 md:grid md:grid-cols-7 md:gap-0 md:py-12">
+      <Appearance appearance={appearance} fonts={config.fonts} />
 
-        <div className="h-max px-4 md:col-span-4 md:px-8">
-          {loading ? (
-            <CheckoutFormLoading />
-          ) : (
-            <CheckoutForm
-              locale={locale}
-              setShippingCost={setTotalShipping}
-              storeClient={storeClient}
-              fonts={config.fonts}
-              checkoutAppearance={appearance}
-              currency={checkout?.currency ?? ""}
-              customer={checkout?.customer}
-              cancelUrl={cancelUrl}
-              checkoutId={checkoutId}
-              clientSecret={clientSecret}
-              onSuccess={onSuccess}
-              onError={onError}
-              exchangeRate={checkout?.exchangeRate ?? 1}
-              publicKey={publicKey}
-              paymentSecret={paymentSecret}
-              paymentComponentKey={paymentComponentKey}
-              clientProxy={clientProxy}
-              latitude={latitude}
-              longitude={longitude}
-              currentAlpha3CountryCode={currentAlpha3CountryCode}
-              shipments={checkout?.shipments || []}
-            />
-          )}
-        </div>
-        <div className="order-first h-max px-4 md:order-last md:col-span-3 md:px-8">
-          <Toaster />
-          {loading ? (
-            <CheckoutSummaryLoading />
-          ) : (
-            <CheckoutSummary
-              currency={checkout?.currency ?? ""}
-              lineItems={checkout?.lineItems ?? []}
-              shipping={totalShipping}
-              tax={checkout?.tax}
-              onCancel={onCancel}
-              exchangeRate={checkout?.exchangeRate ?? 1}
-              applyDiscountCode={applyDiscountCode}
-              appliedDiscounts={checkout?.appliedDiscounts ?? []}
-              removeDiscount={removeDiscount}
-            />
-          )}
-        </div>
+      <div className="h-max px-4 md:col-span-4 md:px-8">
+        {loading ? (
+          <CheckoutFormLoading />
+        ) : (
+          <CheckoutForm
+            locale={locale}
+            setShippingCost={setTotalShipping}
+            storeClient={storeClient}
+            fonts={config.fonts}
+            checkoutAppearance={appearance}
+            currency={checkout?.currency ?? ""}
+            customer={checkout?.customer}
+            cancelUrl={cancelUrl}
+            checkoutId={checkoutId}
+            clientSecret={clientSecret}
+            onSuccess={onSuccess}
+            onError={onError}
+            exchangeRate={checkout?.exchangeRate ?? 1}
+            publicKey={publicKey}
+            paymentSecret={paymentSecret}
+            paymentComponentKey={paymentComponentKey}
+            clientProxy={clientProxy}
+            latitude={latitude}
+            longitude={longitude}
+            currentAlpha3CountryCode={currentAlpha3CountryCode}
+            shipments={checkout?.shipments || []}
+          />
+        )}
       </div>
-    </ShadowWrapper>
+      <div className="order-first h-max px-4 md:order-last md:col-span-3 md:px-8">
+        <Toaster />
+        {loading ? (
+          <CheckoutSummaryLoading />
+        ) : (
+          <CheckoutSummary
+            currency={checkout?.currency ?? ""}
+            lineItems={checkout?.lineItems ?? []}
+            shipping={totalShipping}
+            tax={checkout?.tax}
+            onCancel={onCancel}
+            exchangeRate={checkout?.exchangeRate ?? 1}
+            applyDiscountCode={applyDiscountCode}
+            appliedDiscounts={checkout?.appliedDiscounts ?? []}
+            removeDiscount={removeDiscount}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 

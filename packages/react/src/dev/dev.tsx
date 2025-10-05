@@ -1,5 +1,6 @@
 import { CheckoutEmbed } from "@/react/components";
 import ReactDOM from "react-dom/client";
+import "../globals.css";
 
 const App = () => {
   return (

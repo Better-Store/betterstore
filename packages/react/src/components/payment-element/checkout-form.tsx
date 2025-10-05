@@ -4,7 +4,6 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import React, { memo, useState } from "react";
-import "./betterstore-checkout-embed-payment-element";
 import { useCheckout } from "./useCheckout";
 
 const CheckoutForm = ({

@@ -36,27 +36,19 @@ export type AppearanceConfig = {
 export default function Appearance({
   appearance,
   fonts,
-  shadowRef,
 }: {
   appearance?: AppearanceConfig;
   fonts?: Fonts;
-  shadowRef?: React.RefObject<HTMLDivElement | null>;
 }) {
   useEffect(() => {
-    if (!shadowRef?.current?.shadowRoot) return;
+    if (typeof window === "undefined") return;
 
     try {
       const variables = getVariablesFromAppearanceConfig(appearance);
-      const shadowRoot = shadowRef.current.shadowRoot;
-
-      if (!shadowRoot) {
-        console.warn("Unable to access shadow root");
-        return;
-      }
 
       if (variables) {
         Object.entries(variables).forEach(([key, value]) => {
-          (shadowRoot.host as HTMLElement).style.setProperty(key, value);
+          (document.body as HTMLElement).style.setProperty(key, value);
         });
       }
 
@@ -69,7 +61,7 @@ export default function Appearance({
               const link = document.createElement("link");
               link.rel = "stylesheet";
               link.href = font.cssSrc;
-              shadowRoot.appendChild(link);
+              document.body.appendChild(link);
             } else if ("family" in font) {
               // Handle custom font source
               const style = document.createElement("style");
@@ -81,7 +73,7 @@ export default function Appearance({
                   font-style: ${font.style || "normal"};
                 }
               `;
-              shadowRoot.appendChild(style);
+              document.body.appendChild(style);
             }
           } catch (error) {
             console.error("Error loading font:", error);
@@ -91,7 +83,7 @@ export default function Appearance({
     } catch (error) {
       console.error("Error applying appearance styles:", error);
     }
-  }, [appearance, fonts, shadowRef]);
+  }, [appearance, fonts]);
 
   return null;
 }

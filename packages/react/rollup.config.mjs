@@ -4,7 +4,6 @@ import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import path from "path";
-import postcss from "rollup-plugin-postcss";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -68,15 +67,6 @@ export default {
     json({
       include: "**/*.json",
       preferConst: true,
-    }),
-    postcss({
-      config: {
-        path: "./postcss.config.cjs",
-      },
-      extract: false,
-      modules: false,
-      minimize: false,
-      inject: false,
     }),
   ],
   external: ["react", "react-dom", "react/jsx-runtime"],
