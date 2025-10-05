@@ -22,12 +22,7 @@ class Products {
       params ?? {}
     );
 
-    if (
-      !data ||
-      !Array.isArray(data) ||
-      ("isError" in data && data.isError) ||
-      !("products" in data)
-    ) {
+    if (!data || ("isError" in data && data.isError) || !("products" in data)) {
       return [];
     }
 
@@ -40,12 +35,7 @@ class Products {
     const data: RetrieveProductResponse<T> | ApiError =
       await this.apiClient.post("/products/retrieve", params);
 
-    if (
-      ("isError" in data && data.isError) ||
-      !data ||
-      !("id" in data) ||
-      !("product" in data)
-    ) {
+    if (("isError" in data && data.isError) || !data || !("product" in data)) {
       console.error(`Product not found`);
       return null;
     }

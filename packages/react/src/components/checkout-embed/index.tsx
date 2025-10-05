@@ -3,7 +3,7 @@ import { CheckoutSession } from "@betterstore/bridge";
 import { createStoreClient } from "@betterstore/sdk";
 import React, { memo, useEffect, useRef, useState } from "react";
 import { Toaster } from "../ui/sonner";
-import Appearance, { AppearanceConfig, Fonts } from "./appearance";
+import { AppearanceConfig, Fonts } from "./appearance";
 import CheckoutForm from "./checkout-form";
 import CheckoutFormLoading from "./checkout-form-loading";
 import CheckoutSummary from "./steps/summary";
@@ -336,8 +336,6 @@ function CheckoutEmbedComponent({ checkoutId, config }: CheckoutEmbedProps) {
 
   return (
     <div className="flex h-max flex-col gap-6 py-4 md:grid md:grid-cols-7 md:gap-0 md:py-12">
-      <Appearance appearance={appearance} fonts={config.fonts} />
-
       <div className="h-max px-4 md:col-span-4 md:px-8">
         {loading ? (
           <CheckoutFormLoading />

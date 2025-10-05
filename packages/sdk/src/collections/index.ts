@@ -22,7 +22,6 @@ class Collections {
 
     if (
       !data ||
-      !Array.isArray(data) ||
       ("isError" in data && data.isError) ||
       !("collections" in data)
     ) {
@@ -41,7 +40,6 @@ class Collections {
     if (
       ("isError" in data && data.isError) ||
       !data ||
-      !("id" in data) ||
       !("collection" in data)
     ) {
       console.error(`Collection not found`);

@@ -2,7 +2,6 @@ import {
   Appearance as StripeAppearance,
   StripeElementsOptions,
 } from "@stripe/stripe-js";
-import { useEffect } from "react";
 import { formatColor } from "./color-utils";
 
 export type Themes = "dark" | "light";
@@ -32,61 +31,6 @@ export type AppearanceConfig = {
     popoverForeground?: string;
   };
 };
-
-export default function Appearance({
-  appearance,
-  fonts,
-}: {
-  appearance?: AppearanceConfig;
-  fonts?: Fonts;
-}) {
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    try {
-      const variables = getVariablesFromAppearanceConfig(appearance);
-
-      if (variables) {
-        Object.entries(variables).forEach(([key, value]) => {
-          (document.body as HTMLElement).style.setProperty(key, value);
-        });
-      }
-
-      // Load fonts if provided
-      if (fonts) {
-        fonts.forEach((font) => {
-          try {
-            if ("cssSrc" in font) {
-              // Handle CSS font source
-              const link = document.createElement("link");
-              link.rel = "stylesheet";
-              link.href = font.cssSrc;
-              document.body.appendChild(link);
-            } else if ("family" in font) {
-              // Handle custom font source
-              const style = document.createElement("style");
-              style.textContent = `
-                @font-face {
-                  font-family: '${font.family}';
-                  src: ${font.src};
-                  font-weight: ${font.weight || "normal"};
-                  font-style: ${font.style || "normal"};
-                }
-              `;
-              document.body.appendChild(style);
-            }
-          } catch (error) {
-            console.error("Error loading font:", error);
-          }
-        });
-      }
-    } catch (error) {
-      console.error("Error applying appearance styles:", error);
-    }
-  }, [appearance, fonts]);
-
-  return null;
-}
 
 const getVariablesFromAppearanceConfig = (appearance?: AppearanceConfig) => {
   const colors = getColorVariablesFromAppearanceConfig(appearance);

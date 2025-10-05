@@ -276,7 +276,7 @@ class Client {
       params,
     });
 
-    return data;
+    return data ?? [];
   }
 
   async lookupAddress(

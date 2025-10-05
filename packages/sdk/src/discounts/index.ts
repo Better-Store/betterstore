@@ -24,7 +24,6 @@ class Discounts {
 
     if (
       !data ||
-      !Array.isArray(data) ||
       ("isError" in data && data.isError) ||
       !("discounts" in data)
     ) {
@@ -42,12 +41,7 @@ class Discounts {
       params
     );
 
-    if (
-      ("isError" in data && data.isError) ||
-      !data ||
-      !("id" in data) ||
-      !("discount" in data)
-    ) {
+    if (("isError" in data && data.isError) || !data || !("discount" in data)) {
       console.error(`Discount not found`);
       return null;
     }
