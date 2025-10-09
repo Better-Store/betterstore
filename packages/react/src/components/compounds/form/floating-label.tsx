@@ -40,11 +40,11 @@ const FloatingLabel = React.forwardRef<
           className
         )}
       >
-        <div className="bg-background absolute left-0 right-0 top-1/2 z-0 h-[2px] -translate-x-0 -translate-y-1/2" />
+        <div className="bg-background absolute left-0 right-0 top-1/2 z-10 h-[5px] -translate-x-0 -translate-y-[calc(50%+2px)]" />
         <LabelComponent
           ref={ref}
           className={cn(
-            "relative z-10 block",
+            "relative z-20 block",
             // "after:bg-background after:absolute after:left-0 after:right-0 after:top-1/2 after:z-0 after:h-px after:-translate-y-1/2 after:content-['']",
             "m-0 p-0 px-1 leading-none",
             "duration-200 ease-in-out",

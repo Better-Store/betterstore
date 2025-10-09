@@ -97,7 +97,7 @@ export default function CustomerForm({
 
         <div className="flex justify-end pt-2 md:col-span-2">
           <SubmitButton
-            isValid={form.formState.isValid}
+            isValid={form.formState.isDirty || form.formState.isValid}
             isSubmitting={form.formState.isSubmitting}
           >
             {t("CheckoutEmbed.CustomerForm.button")}

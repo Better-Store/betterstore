@@ -215,6 +215,10 @@ export default function CheckoutForm({
         lastName: data.lastName,
         address: {
           ...data.address,
+          company: data.address.company ?? null,
+          line2: data.address.line2 ?? null,
+          province: data.address.province ?? null,
+          provinceCode: data.address.provinceCode ?? null,
           phone: data.phone,
           name: data.firstName + " " + data.lastName,
         },
@@ -232,6 +236,10 @@ export default function CheckoutForm({
         lastName: data.lastName,
         address: {
           ...data.address,
+          company: data.address.company ?? null,
+          line2: data.address.line2 ?? null,
+          province: data.address.province ?? null,
+          provinceCode: data.address.provinceCode ?? null,
           phone: data.phone,
           name: data.firstName + " " + data.lastName,
         },
