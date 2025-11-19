@@ -45,7 +45,12 @@
     "loading": "Načítání ...",
     "Payment": {
       "back": "Zpět na výběr dopravy",
-      "button": "Dokončit objednávku",
+      "button": {
+        "default": "Dokončit objednávku",
+        "apple_pay": "Zaplatit s Apple Pay",
+        "paypal": "Zaplatit s PayPal",
+        "google_pay": "Zaplatit s Google Pay"
+      },
       "description": "Všechny transakce jsou zabezpečené a šifrované.",
       "title": "Platba"
     },

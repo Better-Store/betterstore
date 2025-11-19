@@ -3,6 +3,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import { StripePaymentElementChangeEvent } from "@stripe/stripe-js";
 import React, { memo, useState } from "react";
 import { useCheckout } from "./useCheckout";
 
@@ -19,10 +20,16 @@ const CheckoutForm = ({
 }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const { setIsSubmitting } = useCheckout();
+  const { setIsSubmitting, setPaymentMethod } = useCheckout();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
+
+  const handlePaymentMethodChange = (
+    event: StripePaymentElementChangeEvent
+  ) => {
+    setPaymentMethod(event?.value?.type ?? null);
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -54,7 +61,7 @@ const CheckoutForm = ({
 
   return (
     <form className="w-full pb-40 sm:pb-0" onSubmit={handleSubmit}>
-      <PaymentElement />
+      <PaymentElement onChange={handlePaymentMethodChange} />
       {errorMessage && (
         <p className="text-destructive -mb-2 mt-2 text-sm">{errorMessage}</p>
       )}

@@ -1,6 +1,8 @@
 import SubmitButton from "@/react/components/compounds/form/submit-button";
 import PaymentElement from "@/react/components/payment-element";
+import { useCheckout } from "@/react/components/payment-element/useCheckout";
 import { Button } from "@/react/components/ui/button";
+import { formatPrice } from "@betterstore/bridge";
 import { StripeElementLocale } from "@stripe/stripe-js";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
@@ -11,6 +13,7 @@ import {
   Fonts,
 } from "../../appearance";
 import { FormStore } from "../../useFormStore";
+import { Icons } from "./icons";
 
 interface PaymentFormProps {
   paymentSecret: string | null;
@@ -26,6 +29,7 @@ interface PaymentFormProps {
   locale?: StripeElementLocale;
   publicKey: string | null;
   paymentComponentKey: number;
+  currency: string;
 }
 
 export default function PaymentForm({
@@ -34,6 +38,7 @@ export default function PaymentForm({
   onError,
   onBack,
   onDoubleBack,
+  currency,
   contactEmail,
   shippingFormData,
   address,
@@ -45,6 +50,31 @@ export default function PaymentForm({
 }: PaymentFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
+  const { paymentMethod } = useCheckout();
+
+  const submitButtonTextKey =
+    paymentMethod === "apple_pay"
+      ? "apple_pay"
+      : paymentMethod === "card"
+        ? "default"
+        : paymentMethod === "paypal"
+          ? "paypal"
+          : paymentMethod === "google_pay"
+            ? "google_pay"
+            : "default";
+  const submitButtonText = t(
+    `CheckoutEmbed.Payment.button.${submitButtonTextKey}`
+  );
+
+  const renderButtonIcon = () => {
+    return submitButtonTextKey === "apple_pay" ? (
+      <Icons.apple className="size-5 max-sm:size-[22px]" />
+    ) : submitButtonTextKey === "google_pay" ? (
+      <Icons.google className="ml-1 size-4 max-sm:size-5" />
+    ) : submitButtonTextKey === "paypal" ? (
+      <Icons.paypal className="ml-1 size-4 max-sm:size-5" />
+    ) : null;
+  };
 
   return (
     <div className="space-y-6">
@@ -89,7 +119,7 @@ export default function PaymentForm({
                 ([id, shipmentFormData]) => (
                   <p key={id}>
                     {shipmentFormData.displayName} ·{" "}
-                    {shipmentFormData.priceInCents}
+                    {formatPrice(shipmentFormData.priceInCents, currency)}
                   </p>
                 )
               )}
@@ -120,7 +150,7 @@ export default function PaymentForm({
             <div className="fixed bottom-0 left-0 right-0 z-50 mt-8 px-4 sm:static sm:px-0">
               <div className="bg-background flex flex-col-reverse items-center justify-between gap-2 pb-4 sm:flex-row sm:bg-transparent sm:pb-0">
                 <Button
-                  className="w-full sm:w-fit"
+                  className="w-full max-sm:hidden sm:w-fit"
                   type="button"
                   variant="ghost"
                   onClick={onBack}
@@ -129,11 +159,12 @@ export default function PaymentForm({
                   {t("CheckoutEmbed.Payment.back")}
                 </Button>
                 <SubmitButton
-                  className="w-full max-sm:h-[52px] sm:w-fit"
+                  className="w-full max-sm:h-[52px] max-sm:text-base sm:w-fit"
                   isValid={true}
                   isSubmitting={isSubmitting}
                 >
-                  {t("CheckoutEmbed.Payment.button")}
+                  {submitButtonText}
+                  {renderButtonIcon()}
                 </SubmitButton>
               </div>
             </div>

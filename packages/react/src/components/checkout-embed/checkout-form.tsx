@@ -326,6 +326,7 @@ export default function CheckoutForm({
           address={formatAddress(formData.customer.address)}
           shippingFormData={formData.shipping}
           publicKey={publicKey}
+          currency={currency}
         />
       );
     }

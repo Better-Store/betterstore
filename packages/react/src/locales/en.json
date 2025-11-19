@@ -77,7 +77,12 @@
       "title": "Payment",
       "description": "All transactions are secure and encrypted.",
       "back": "Back to shipping",
-      "button": "Buy now"
+      "button": {
+        "default": "Buy now",
+        "apple_pay": "Pay with Apple Pay",
+        "paypal": "Pay with PayPal",
+        "google_pay": "Pay with Google Pay"
+      }
     }
   },
   "Errors": {
