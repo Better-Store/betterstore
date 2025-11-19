@@ -237,7 +237,7 @@ export function AddressInput({
                     </button>
                   </div>
                 </>
-              ) : addressInput.length > 2 ? (
+              ) : addressInput.length <= 4 ? (
                 <div className="text-muted-foreground border-border border-b p-3 text-sm">
                   {t("CheckoutEmbed.CustomerForm.address.keepTyping")}
                 </div>
