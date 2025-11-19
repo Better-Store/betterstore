@@ -7,7 +7,7 @@ import { cn } from "@/react/lib/utils";
 import { AutosuggestAddressResult } from "@betterstore/bridge";
 import { createStoreClient } from "@betterstore/sdk";
 import { ArrowRight, Loader, Plus, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import CountryInput from "../country-input";
@@ -44,6 +44,8 @@ export function AddressInput({
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingLookup, setIsLoadingLookup] = useState(false);
+
+  const latestQueryRef = useRef<string>("");
 
   const addressInput = form.watch("address.line1") || "";
   const cityInput = form.watch("address.city") || "";
@@ -86,10 +88,11 @@ export function AddressInput({
     if (!showAllInputs && addressInput.length > 2) {
       setIsLoading(true);
 
+      latestQueryRef.current = addressInput;
+
       const fetchSuggestions = async () => {
         try {
           const countryCode = form.watch("address.countryCode");
-
           const results = await storeClient.getAutosuggestAddressResults(
             clientSecret,
             {
@@ -102,14 +105,20 @@ export function AddressInput({
           );
           console.log(results);
 
-          setSuggestions(results);
-          setShowSuggestions(true);
+          if (latestQueryRef.current === addressInput) {
+            setSuggestions(results);
+            setShowSuggestions(true);
+          }
         } catch (error) {
-          console.error("Error fetching address suggestions:", error);
-          setShowSuggestions(false);
-          setSuggestions([]);
+          if (latestQueryRef.current === addressInput) {
+            console.error("Error fetching address suggestions:", error);
+            setShowSuggestions(false);
+            setSuggestions([]);
+          }
         } finally {
-          setIsLoading(false);
+          if (latestQueryRef.current === addressInput) {
+            setIsLoading(false);
+          }
         }
       };
 
