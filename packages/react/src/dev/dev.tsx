@@ -5,10 +5,10 @@ import "../globals.css";
 const App = () => {
   return (
     <CheckoutEmbed
-      checkoutId="68e2bc3105815cffe397bf8d"
+      checkoutId="691ccdc91a701569a62d5164"
       config={{
         clientSecret:
-          "2c018056894c43dedd8971d0634d61509b199f28cdd024829691503970b442e7",
+          "f48b7dd1ae4cb6396eddb0a3f5c11e6550ed27f8ae2ead598c8e009561b51626",
         cancelUrl: "/cancel",
         successUrl: "/success",
         locale: "en",

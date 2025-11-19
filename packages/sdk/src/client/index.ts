@@ -90,7 +90,7 @@ class Client {
   ): Promise<CheckoutSession> {
     const apiClient = createApiClient(clientSecret, this.proxy);
     const data: CheckoutSession = await apiClient.delete(
-      `/checkout/${checkoutId}/discounts/${discountId}`
+      `/checkout/${checkoutId}/discounts/remove/${discountId}`
     );
 
     if (("isError" in data && data.isError) || !data || !("id" in data)) {
@@ -132,11 +132,14 @@ class Client {
       `/checkout/${checkoutId}/shipping/rates`
     );
 
-    if (("isError" in data && data.isError) || !data || !("rates" in data)) {
+    console.log("SHIPPING RATES DATA: ", data);
+
+    if (("isError" in data && data.isError) || !data) {
+      console.error("Failed to get shipping rates: ", data);
       return {};
     }
 
-    return data;
+    return data as GetShippingRatesResponse;
   }
 
   /**
@@ -157,7 +160,7 @@ class Client {
           publicKey: string;
           checkoutSession: CheckoutSession;
         }
-      | ApiError = await apiClient.post(`/checkout/payment/${checkoutId}`);
+      | ApiError = await apiClient.post(`/checkout/${checkoutId}/payment`);
 
     if (
       ("isError" in data && data.isError) ||

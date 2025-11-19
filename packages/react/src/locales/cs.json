@@ -67,7 +67,8 @@
       },
       "shipment": {
         "title": "Zásilka č."
-      }
+      },
+      "errorNoShippingRates": "Dopravu se nepodařilo načíst. Zkuste stránku obnovit. Pokud problém přetrvává, kontaktujte prodejce."
     }
   },
   "Errors": {

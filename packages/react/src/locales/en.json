@@ -44,6 +44,7 @@
     },
     "loading": "Loading...",
     "Shipping": {
+      "errorNoShippingRates": "Failed to load shipping rates. Try to refresh the page. Contact the seller if the problem persists.",
       "title": "Shipping",
       "change": "Change",
       "address": "Address:",

@@ -17,7 +17,7 @@ import {
 import { formatAddress } from "./steps/customer/address-utils";
 import CustomerForm from "./steps/customer/form";
 import PaymentForm from "./steps/payment/form";
-import ShippingMethodForm from "./steps/shipping/form";
+import ShipmentsShippingMethodForm from "./steps/shipping/form";
 import { useFormStore } from "./useFormStore";
 
 interface CheckoutFormProps {
@@ -75,9 +75,9 @@ export default function CheckoutForm({
     checkoutId: storedCheckoutId,
     setCheckoutId,
   } = useFormStore();
-  const [shippingRates, setShippingRates] = useState<GetShippingRatesResponse>(
-    {}
-  );
+  const [shippingRates, setShippingRates] = useState<
+    GetShippingRatesResponse | undefined
+  >(undefined);
 
   const validateStep = useCallback(() => {
     if (step === "customer") return;
@@ -179,7 +179,7 @@ export default function CheckoutForm({
 
   useEffect(() => {
     if (step !== "shipping") return;
-    if (Object.keys(shippingRates).length > 0) return;
+    if (Object.keys(shippingRates ?? {}).length > 0) return;
 
     const getShippingRates = async () => {
       try {
@@ -187,6 +187,7 @@ export default function CheckoutForm({
           clientSecret,
           checkoutId
         );
+        console.log("FETCHED SHIPPING RATES: ", shippingRates);
         setShippingRates(shippingRates);
       } catch (error) {
         console.error("Failed to load shipping rates:", error);
@@ -245,7 +246,7 @@ export default function CheckoutForm({
         },
       });
     }
-
+    console.log("FETCHING SHIPPING RATES");
     const shippingRates = await storeClient.getCheckoutShippingRates(
       clientSecret,
       checkoutId
@@ -331,7 +332,7 @@ export default function CheckoutForm({
 
     if (step === "shipping" && formData.customer) {
       return (
-        <ShippingMethodForm
+        <ShipmentsShippingMethodForm
           setFormData={setFormData}
           formData={formData}
           shippingRates={shippingRates}

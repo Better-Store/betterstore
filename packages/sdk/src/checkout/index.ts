@@ -92,7 +92,7 @@ class Checkout {
     discountId: string
   ): Promise<CheckoutSession | null> {
     const data: CheckoutSession | ApiError = await this.apiClient.delete(
-      `/checkout/${checkoutId}/discounts/${discountId}`
+      `/checkout/${checkoutId}/discounts/remove/${discountId}`
     );
 
     if (("isError" in data && data.isError) || !data || !("id" in data)) {
@@ -131,7 +131,10 @@ class Checkout {
       `/checkout/${checkoutId}/shipping/rates`
     );
 
+    console.log("SHIPPING RATES DATA: ", data);
+
     if (("isError" in data && data.isError) || !data) {
+      console.error("Failed to get shipping rates: ", data);
       return {};
     }
 
@@ -153,7 +156,7 @@ class Checkout {
           checkoutSession: CheckoutSession;
         }
       | ApiError = await this.apiClient.post(`
-      /checkout/payment/${checkoutId}`);
+      /checkout/${checkoutId}/payment`);
 
     if (
       ("isError" in data && data.isError) ||

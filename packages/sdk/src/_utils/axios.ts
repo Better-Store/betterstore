@@ -52,7 +52,7 @@ export const createApiClient = (apiKey: string, proxy?: string) => {
         apiError.details = error;
       }
 
-      console.error(apiError);
+      console.error("API ERROR: ", apiError);
 
       if (
         apiError.code === "REQUEST_SETUP_ERROR" ||

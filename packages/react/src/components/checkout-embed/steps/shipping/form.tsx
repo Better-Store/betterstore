@@ -21,7 +21,7 @@ import { FormStore } from "../../useFormStore";
 import ShippingOptionWrapper from "./shipping-option-wrapper";
 
 interface ShipmentsFormProps {
-  shippingRates: GetShippingRatesResponse;
+  shippingRates: GetShippingRatesResponse | undefined;
   initialData?: ShipmentsFormData;
   onSubmit: (data: ShipmentsFormData) => void;
   onBack: () => void;
@@ -36,7 +36,7 @@ interface ShipmentsFormProps {
   shipments: CheckoutSession["shipments"];
 }
 
-export default function ShipmentsForm({
+export default function ShipmentsShippingMethodForm({
   shippingRates,
   initialData,
   onSubmit,
@@ -75,6 +75,9 @@ export default function ShipmentsForm({
     (value) => value.rateId?.length > 0
   );
 
+  const shippingRatesAreLoadingOrDefined =
+    shippingRates === undefined || Object.keys(shippingRates).length > 0;
+
   return (
     <div className="space-y-6">
       <h2>{t("CheckoutEmbed.Shipping.title")}</h2>
@@ -107,22 +110,28 @@ export default function ShipmentsForm({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {shipments.map((shipment, index) => (
-            <SingleShipmentSection
-              key={shipment.id}
-              shipment={shipment}
-              shippingRates={shippingRates[shipment.id] ?? []}
-              form={form}
-              setFormData={setFormData}
-              formData={formData}
-              currency={currency}
-              exchangeRate={exchangeRate}
-              locale={locale}
-              countryCode={countryCode}
-              multipleShipments={shipments.length > 1}
-              index={index}
-            />
-          ))}
+          {!shippingRatesAreLoadingOrDefined && (
+            <p className="text-destructive py-2 text-base font-medium">
+              {t("CheckoutEmbed.Shipping.errorNoShippingRates")}
+            </p>
+          )}
+          {shippingRatesAreLoadingOrDefined &&
+            shipments.map((shipment, index) => (
+              <SingleShipmentSection
+                key={shipment.id}
+                shipment={shipment}
+                shippingRates={shippingRates?.[shipment.id] ?? []}
+                form={form}
+                setFormData={setFormData}
+                formData={formData}
+                currency={currency}
+                exchangeRate={exchangeRate}
+                locale={locale}
+                countryCode={countryCode}
+                multipleShipments={shipments.length > 1}
+                index={index}
+              />
+            ))}
           <FormMessage>{form.formState.errors.root?.message}</FormMessage>
 
           <div className="flex items-center justify-between pt-4">
@@ -182,104 +191,109 @@ const SingleShipmentSection = ({
           {index + 1}
         </h3>
       )}
-      {shippingRates.length === 0 &&
-        Array.from({ length: 3 }).map((_, index) => (
-          <ShippingRateLoading key={index} />
-        ))}
-      {shippingRates.map((rate) => {
-        const pickupPointDisplayName = form.watch(
-          `${shipmentId}.pickupPointDisplayName`
-        );
-        const intPrice = Math.ceil(Number(rate.priceInCents));
-        const displayPrice = formatPrice(intPrice, currency, exchangeRate);
+      <div className="space-y-2">
+        {shippingRates.length === 0 &&
+          Array.from({ length: 3 }).map((_, index) => (
+            <ShippingRateLoading key={index} />
+          ))}
+        {shippingRates.map((rate) => {
+          const pickupPointDisplayName = form.watch(
+            `${shipmentId}.pickupPointDisplayName`
+          );
+          const intPrice = Math.ceil(Number(rate.priceInCents));
+          const displayPrice = formatPrice(intPrice, currency, exchangeRate);
 
-        const isFixedRate = rate.type === "FIXED";
-        const isAutoRate =
-          rate.type === "CUSTOM_SHIPPING_VENDOR" ||
-          rate.type === "PLATFORM_CARRIER";
-        const isZasilkovna = isAutoRate && rate.providerId === "zasilkovna";
+          const isFixedRate = rate.type === "FIXED";
+          const isAutoRate =
+            rate.type === "CUSTOM_SHIPPING_VENDOR" ||
+            rate.type === "PLATFORM_CARRIER";
+          const isZasilkovna = isAutoRate && rate.providerId === "zasilkovna";
 
-        const name = isFixedRate
-          ? rate.name
-          : (t(`CheckoutEmbed.Shipping.Shipment.perIdTitles.${rate.id}`) ??
-            rate.id);
+          const name = isFixedRate
+            ? rate.name
+            : (t(`CheckoutEmbed.Shipping.Shipment.perIdTitles.${rate.id}`) ??
+              rate.id);
 
-        const fallbackDescription = t(
-          `CheckoutEmbed.Shipping.Shipment.perIdDescriptions.fallback`
-        );
-        const description =
-          (isFixedRate
-            ? rate.description
-            : t(
-                `CheckoutEmbed.Shipping.Shipment.perIdDescriptions.${rate.id}`
-              )) ?? fallbackDescription;
+          const fallbackDescription = t(
+            `CheckoutEmbed.Shipping.Shipment.perIdDescriptions.fallback`
+          );
+          const description =
+            (isFixedRate
+              ? rate.description
+              : t(
+                  `CheckoutEmbed.Shipping.Shipment.perIdDescriptions.${rate.id}`
+                )) ?? fallbackDescription;
 
-        return (
-          <ShippingOptionWrapper
-            rate={rate}
-            key={rate.id}
-            onPickupPointSelected={(
-              pickupPointId: string,
-              pickupPointName: string
-            ) => {
-              const newData = {
-                rateId: rate.id,
-                providerId: isAutoRate ? rate.providerId : undefined,
-                priceInCents: intPrice,
-                displayName: name,
-                pickupPointId: isZasilkovna ? pickupPointId : "",
-                pickupPointDisplayName: isZasilkovna ? pickupPointName : "",
-              };
+          return (
+            <ShippingOptionWrapper
+              rate={rate}
+              key={rate.id}
+              onPickupPointSelected={(
+                pickupPointId: string,
+                pickupPointName: string
+              ) => {
+                const newData = {
+                  rateId: rate.id,
+                  providerId: isAutoRate ? rate.providerId : undefined,
+                  priceInCents: intPrice,
+                  displayName: name,
+                  pickupPointId: isZasilkovna ? pickupPointId : "",
+                  pickupPointDisplayName: isZasilkovna ? pickupPointName : "",
+                };
 
-              form.setValue(`${shipmentId}.rateId`, newData.rateId);
-              form.setValue(`${shipmentId}.providerId`, newData.providerId);
-              form.setValue(`${shipmentId}.displayName`, newData.displayName);
-              form.setValue(`${shipmentId}.priceInCents`, newData.priceInCents);
-              form.setValue(
-                `${shipmentId}.pickupPointId`,
-                newData.pickupPointId
-              );
-              form.setValue(
-                `${shipmentId}.pickupPointDisplayName`,
-                newData.pickupPointDisplayName
-              );
+                form.setValue(`${shipmentId}.rateId`, newData.rateId);
+                form.setValue(`${shipmentId}.providerId`, newData.providerId);
+                form.setValue(`${shipmentId}.displayName`, newData.displayName);
+                form.setValue(
+                  `${shipmentId}.priceInCents`,
+                  newData.priceInCents
+                );
+                form.setValue(
+                  `${shipmentId}.pickupPointId`,
+                  newData.pickupPointId
+                );
+                form.setValue(
+                  `${shipmentId}.pickupPointDisplayName`,
+                  newData.pickupPointDisplayName
+                );
 
-              setFormData({
-                ...formData,
-                shipping: { ...formData.shipping, [shipmentId]: newData },
-              });
-            }}
-            locale={locale}
-            countryCode={countryCode}
-          >
-            <div
-              className={clsx(
-                "bg-background cursor-pointer rounded-md border p-4",
-                {
-                  "bg-muted border-primary": currentRateId === rate.id,
-                }
-              )}
+                setFormData({
+                  ...formData,
+                  shipping: { ...formData.shipping, [shipmentId]: newData },
+                });
+              }}
+              locale={locale}
+              countryCode={countryCode}
             >
-              <div className="flex w-full items-center justify-between">
-                <p>{name}</p>
-                <p>{displayPrice}</p>
+              <div
+                className={clsx(
+                  "bg-background cursor-pointer rounded-md border p-4",
+                  {
+                    "bg-muted border-primary": currentRateId === rate.id,
+                  }
+                )}
+              >
+                <div className="flex w-full items-center justify-between">
+                  <p>{name}</p>
+                  <p>{displayPrice}</p>
+                </div>
+                <p className="text-muted-foreground text-sm">{description}</p>
+                {pickupPointDisplayName && (
+                  <>
+                    <hr className="my-2" />
+                    <p className="text-muted-foreground text-sm">
+                      {t("CheckoutEmbed.Shipping.description.shippedTo")}{" "}
+                      <span className="text-foreground">
+                        {pickupPointDisplayName}
+                      </span>
+                    </p>
+                  </>
+                )}
               </div>
-              <p className="text-muted-foreground text-sm">{description}</p>
-              {pickupPointDisplayName && (
-                <>
-                  <hr className="my-2" />
-                  <p className="text-muted-foreground text-sm">
-                    {t("CheckoutEmbed.Shipping.description.shippedTo")}{" "}
-                    <span className="text-foreground">
-                      {pickupPointDisplayName}
-                    </span>
-                  </p>
-                </>
-              )}
-            </div>
-          </ShippingOptionWrapper>
-        );
-      })}
+            </ShippingOptionWrapper>
+          );
+        })}
+      </div>
     </div>
   );
 };
