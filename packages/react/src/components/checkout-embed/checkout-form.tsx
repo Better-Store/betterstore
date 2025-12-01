@@ -283,6 +283,8 @@ export default function CheckoutForm({
         }) satisfies NonNullable<CheckoutUpdateParams["shipments"]>[number]
     );
 
+    console.log("UPDATING CHECKOUT WITH SHIPMENTS: ", shipments);
+
     await storeClient.updateCheckout(clientSecret, checkoutId, {
       shipments,
     });

@@ -52,8 +52,8 @@ class Checkout {
     checkoutId: string,
     params: CheckoutUpdateParams
   ): Promise<CheckoutSession | null> {
-    const data: CheckoutSession | ApiError = await this.apiClient.put(
-      `/checkout/${checkoutId}`,
+    const data: CheckoutSession | ApiError = await this.apiClient.post(
+      `/checkout/${checkoutId}/update`,
       params
     );
 

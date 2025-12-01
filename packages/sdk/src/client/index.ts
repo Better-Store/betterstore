@@ -46,9 +46,9 @@ class Client {
     params: CheckoutUpdateParams
   ): Promise<CheckoutSession | null> {
     const apiClient = createApiClient(clientSecret, this.proxy);
-    const data: CheckoutSession | ApiError = await apiClient.put(
-      `/checkout/${checkoutId}`,
-      params
+    const data: CheckoutSession | ApiError = await apiClient.post(
+      `/checkout/${checkoutId}/update`,
+      { ...params }
     );
 
     if (("isError" in data && data.isError) || !data || !("id" in data)) {

@@ -17,11 +17,19 @@ export const createApiClient = (apiKey: string, proxy?: string) => {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
   });
+
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  if (process.env.NODE_ENV === "development") {
+    client.interceptors.request.use((config) => {
+      console.log("Request method:", config.method);
+      console.log("Request URL:", config.url);
+      console.log("Request headers:", config.headers);
+      console.log("Request body:", config.data);
+      return config;
+    });
+  }
 
   // Add response interceptor for error handling
   client.interceptors.response.use(
@@ -29,39 +37,17 @@ export const createApiClient = (apiKey: string, proxy?: string) => {
     (error: AxiosError): ApiError | never => {
       const apiError: ApiError = {
         isError: true,
-        status: 500,
-        message: "An unexpected error occurred",
+        status: error.response?.status ?? 500,
+        message:
+          (error.response?.data as any)?.error ||
+          error.message ||
+          "Unknown error",
+        code: (error.response?.data as any)?.code,
+        details: error.response?.data,
       };
 
-      if (error.response) {
-        apiError.status = error.response.status;
-        apiError.message =
-          (error.response.data as { error?: string })?.error ||
-          "Server error occurred";
-        apiError.code = (error.response.data as { code?: string })?.code;
-        apiError.details = error.response.data;
-      } else if (error.request) {
-        apiError.status = 503;
-        apiError.message = "Service unavailable - no response from server";
-        apiError.code = "SERVICE_UNAVAILABLE";
-        apiError.details = error;
-      } else {
-        apiError.status = 500;
-        apiError.message = "Request configuration error";
-        apiError.code = "REQUEST_SETUP_ERROR";
-        apiError.details = error;
-      }
-
-      console.error("API ERROR: ", apiError);
-
-      if (
-        apiError.code === "REQUEST_SETUP_ERROR" ||
-        apiError.code === "SERVICE_UNAVAILABLE"
-      ) {
-        throw apiError;
-      }
-
-      return apiError;
+      // THROW, do NOT return
+      throw apiError;
     }
   );
 
